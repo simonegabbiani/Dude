@@ -1,4 +1,3 @@
-
 http://dudephp.blogspot.com (Italian Blog)
 
 the "Dude" php framework builder.
@@ -24,7 +23,7 @@ the "Dude" php framework builder.
 
 5. Type the name of your project, eg. "HalloWorld.prj" then press enter
 
-6. When compiled finish, choose "context" then select..
+6. When compiled, choose "context" then select..
 	.. a) "build all contexts"
 	.. b) "build event files"
 
