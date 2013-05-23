@@ -72,13 +72,18 @@ it is not unique so you have to give a unique file name.
 
 ABOUT THE LICENSE:
 
-THE SOURCE FILES IN THE FOLLOWING FOLDERS: 
-/~system/~bin, /~system/~runtime, /~system/Base, /~system/www, /~system/WebMasterTools
+- THE SOURCE FILES IN THE FOLLOWING FOLDERS.. 
+/~system/~bin, /~system/~runtime
 
-ARE RELEASED UNDER THE Creative Commons BY SA 3.0
+..ARE RELEASED UNDER THE Creative Commons BY SA 3.0
 http://creativecommons.org/licenses/by-sa/3.0/
 SEE LICENSE.TXT
 
-ALL OTHER FILES / LIBRARIES / PACKAGES FOLLOWS THE RESPECTIVE
-INTENTION OF THE AUTHORS.
+- THE SOURCES UNDER THE FOLLOWING FOLDERS..
+/~system/Base, /~system/www, /~system/WebMasterTools
+
+..ARE RELEASED UNDER THE M.I.T. License.
+
+ALL OTHER FILES / LIBRARIES / PACKAGES NOT MENTIONED 
+HERE FOLLOWS THE RESPECTIVE INTENTION OF THE AUTHORS.
 
