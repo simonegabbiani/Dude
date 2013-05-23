@@ -1,0 +1,150 @@
+<dude>
+
+	@DEPRECATED
+
+	/**
+	 * Easily embedding the build engine into the Environment application
+	 *
+	 * (this file is DEPRECATED, due of the decision to use a dude application 
+	 *  editor AS SUBFOLDER of ~bin directory and not a standalone dude project).
+	 *
+	 * Usage <!--
+	 * <dude xmlns:dude-engine='~/~bin/embed.xml'>
+	 *   <dude-engine:Embed/>
+	 *	 ...
+	 *  -->
+	 */
+
+	<asset require="build.php" />
+	<asset require="functions.php" />
+	<asset require="stack.php" />
+	<asset require="uncategorized.php" />
+	<asset require="parse-functions.php" />
+	<asset require="parser.php" />
+	<asset require="expr.php" />
+	<asset require="context.php" />
+	<asset require="exception-tags.php" />
+	<asset require="old-attrformat.php" />
+	<asset require="exploder-lib.php" />
+	
+	
+	/**
+	 * Due of dependency mechanism, the compiler will includes
+	 * all assets above when a client simply use this descriptor.
+	 *
+	 */
+	<define-descriptor name="Embed">
+	<code>
+		if (!<code exists="~.DudePath" />)
+			throw new DudeEngineException_ApplicationHasMoved();
+		<sub-elements />;
+	</code>
+	</define-descriptor>
+	
+	
+	/**
+	 * Build-Setup	
+	 *
+	 *
+	 */
+	<define-macro name="Build-Setup" attr-format="project-name=STRING [check-index=BOOL] [if-not-called=BOOL]">
+	<code>
+		if (!<code exists="Context.Dude.Build-Setup" />) {
+			$_SESSION['project-name'] = {%project-name%};
+			$m_cwd = getcwd();
+			Build::setup({%~.DudePath%});
+			if (!GeneralIndex::load() &amp;&amp; {%check-index%})
+				throw new Exception('Index does not exists in path '.{%~.DudePath%});
+			chdir($m_cwd);
+		} else if (!<code has-attr="if-not-called" /> || !{%if-not-called%}) {
+			throw new Exception('Dude Embed.xml:Build-Setup already called');
+		}
+		<code set="Context.Dude.Build-Setup" value="1" />;
+	</code>
+	</define-macro>
+	
+	<define-macro name="check-build-setup">
+		<code>
+			if (!<code exists="Context.Dude.Build-Setup" />)
+				throw new Exception('Dude Embed.xml:Build-Setup missing');
+		</code>
+	</define-macro>
+	
+	
+	<part name="Build-Context-List" export="List">
+		<check-build-setup />
+		<code>
+			
+			$keys = array_keys(GeneralIndex::$index->context);
+			sort($keys);
+			
+			<set name="List" value="@array()" />;
+			<export var="List" />
+			foreach ($keys as $k)
+				array_push({%List%}, 
+					array('name' => $k, 'instance' => GeneralIndex::$index->context[$k],
+							'deleted' => GeneralIndex::$index->context[$k]->tmpDeleted,
+							'url' => Utils::encode(GeneralIndex::$index->context[$k]->name, true, true).'.php'));
+		</code>
+	</part>
+			
+
+	<define-macro name="foreach-Project-Name">
+	<code>
+		if (!<code exists="~.DudePath" />)
+			throw new DudeEngineException_ApplicationHasMoved();
+		
+		$fePN__dir = new DirectoryIterator({%~.DudePath%});
+		foreach ($fePN__dir as $fePN__f) {
+			$fePN__n = $fePN__f->getFilename();
+			if ($fePN__f->isDir() &amp;&amp; $fePN__n != '~system' &amp;&amp; $fePN__n != '.' &amp;&amp; $fePN__n != '..') {
+				<set name="projectName" value="$fePN__f->getFilename()" />;
+				<sub-elements />;
+			}
+		}
+	</code>
+	</define-macro>
+	
+	/**
+	 * build projects list as string
+	 *
+	 */
+	<part name="project-list" attr-format="delimiter=STRING" export="value">
+		<!-- create project list in string format -->
+		<set name="value" value="" />
+		<export vars="value" />
+		<foreach-Project-Name as="p">
+			<set name="value" value="@{%value%} .= {%delimiter%}.'\''.addcslashes({%p.projectName%}, '\'').'\''" />
+		</foreach-Project-Name>
+		<!-- cut-off first delimiter -->
+		<set name="value" value="@substr  (  {%value%}  , strlen({%delimiter%}    )   )" />
+		<!-- render out (useful for capture) -->
+		{%value%}
+	</part>
+	
+	/**
+	 * Exploder
+	 *
+	 * Recursion "explosion" of all components build a context
+	 *
+	 */
+	<part name="explode-context" attr-format="name=STRING [nest=NUMBER]">
+	<check-build-setup />
+	<code>
+		$x = GeneralIndex::$index->context[ {%name%} ];
+		$info = array(); $text = '';
+		Exploder::$keys = array(); //bleah mettere a posto
+		Exploder::part('plain', $x->partStartPoint->fullName, $info, $text);
+		<set name="Text" value="$text" />;
+		foreach ($info as $u) {
+			<set name="SimpleName" value="@$u['cmp']->simpleName" />;
+			<set name="FileName" value="@$u['cmp']->df->fileName" />;
+			<set name="UPMData" value="@&amp;$u" />;
+			<export vars="UPMData, Text, SimpleName, FileName" />
+			<sub-elements name="ForEachComponent"/>;
+		}
+	</code>
+	</part>
+	 
+	 
+</dude>

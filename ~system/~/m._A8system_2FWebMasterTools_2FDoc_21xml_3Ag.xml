@@ -1,0 +1,9 @@
+<define-macro name="g">
+	<code>
+		if (!<code exists="context.WebMasterTools_Doc_g.currentNest"/>)
+			<code set="context.WebMasterTools_Doc_g.currentNest" value="0"/>;
+		<code set="context.WebMasterTools_Doc_g.currentNest" value="@++"/>;
+		<sub-elements/>;
+		<code set="context.WebMasterTools_Doc_g.currentNest" value="@--"/>;
+	</code>
+	</define-macro>

@@ -1,0 +1,33 @@
+<dude xmlns:w="~/www/">
+
+	<asset file="/JS/jquery.min.js" />
+
+	<part name="My-HTML-Document" attr-format="title=STRING">
+		<html lang="it">
+			<head>
+				<title>{%title%}</title>
+				<script language="javascript" src="/JS/jquery.min.js" /> <!-- dude automatically adds </script> -->
+				<style type="text/css">
+					h1, p {
+						padding:10px;
+						<w:css-shadow />
+					}
+				</style>
+			</head>
+			<body>
+				<h1>{%title%}</h1>
+				<sub-elements name="PageContent" />
+			</body>
+		</html>
+	</part>
+	
+	<part auto-context="/index-2">
+		<set name="my-title" value="Hallo World" />
+		<use part="My-HTML-Document" title="{%my-title%}">
+			<PageContent>
+				<p>This is the content of the page</p>
+			</PageContent>
+		</use>
+	</part>
+
+</dude>

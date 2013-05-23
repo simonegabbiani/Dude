@@ -1,0 +1,7 @@
+<define-descriptor name="Embed">
+	<code>
+		if (!<code exists="~.DudePath"/>)
+			throw new DudeEngineException_ApplicationHasMoved();
+		<sub-elements/>;
+	</code>
+	</define-descriptor>

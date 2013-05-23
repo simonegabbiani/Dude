@@ -1,0 +1,5 @@
+<define-macro name="delete-cookie" attr-format="name=STRING">
+	<code>
+		setcookie(<code get-attr="name"/>, '', -3600);
+	</code>
+	</define-macro>

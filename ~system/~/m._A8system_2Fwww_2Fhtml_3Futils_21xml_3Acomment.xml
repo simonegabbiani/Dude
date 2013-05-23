@@ -1,0 +1,14 @@
+<define-macro name="comment" attr-format="[if=STRING]">
+		<code>
+			if ({%if%} != null) {
+				<code render="&lt;!--[if {%if%}]&gt;"/>;
+				<code sub-elements=""/>;
+				<code render="&lt;![endif]--&gt;"/>;
+			}
+			else {
+				<code render="&lt;!--"/>;
+				<code sub-elements=""/>;
+				<code render="--&gt;"/>;
+			}
+		</code>
+	</define-macro>

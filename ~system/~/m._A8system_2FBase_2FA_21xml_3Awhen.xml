@@ -1,0 +1,10 @@
+<define-macro name="when" attr-format="condition=ANY">
+	<code>
+		if (<code get-attr="condition"/>) {
+			<sub-elements name="true"/>;
+		}
+		else {
+			<sub-elements name="false"/>;
+		}
+	</code>
+	</define-macro>

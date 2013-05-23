@@ -1,0 +1,157 @@
+﻿<dude xmlns:env="http://dudenvironment.org/Environment">
+ 
+# 
+# D.xml (MySQL)
+#
+
+	<define-descriptor name="dbconn-package"><code sub-elements=""/></define-descriptor>
+	
+	<define-descriptor name="dbconn-profile" 
+		attr-format="[id=STRING] username=STRING (password=STRING | enc-password=STRING) host=STRING db=STRING vendor=STRING" 
+		cache="application">
+			<code sub-elements="" />
+	</define-descriptor>
+
+================================================================================================================
+HANDLERS:
+	
+	<part for-handling-descriptor="dbconn-profile" run-on="application-start" attr-format="f=FILE x=VAR c=NUMBER d=NUMBER">
+		<code>
+			echo "dbconnprofile:handler started on-application-start";
+			var_dump($this->DS);
+			if (!<code exists="Application.DBConn.profiles" />)
+				$a = array();
+			else
+				$a = {%Application.DBConn.profiles%};
+			if (($id = {%x%}->getAttribute('id')) == null) 
+				$id = 'default';
+			if (isset($a[ $id ]) &amp;&amp; {%c%} > 1)
+				throw new UserConfigurationError('DBConn: profile '.$id.' already defined. Check usages for descriptor &lt;dbconn-profile&gt;');
+			$a[$id] = array('username' => {%x%}->getAttribute('username'), 
+						'password' => {%x%}->hasAttribute('enc-password') ? base64_decode({%x%}->getAttribute('enc-password')) : {%x%}->getAttribute('password'),
+						'host' => {%x%}->getAttribute('host'), 'db' => {%x%}->getAttribute('db'), 'vendor' => {%x%}->getAttribute('vendor') );
+			<code set="Application.DBConn.profiles" value="$a" />;
+		</code>
+	</part>
+	
+	<part run-on="context-end" for-handling-descriptor="dbconn-profile">
+		<code>
+			foreach ($GLOBALS['DBConn.pdo'] as $c)
+				DB_MYSQL::close($c);
+		</code>
+	</part>
+	
+	<part run-on="session-start" for-handling-descriptor="dbconn-profile">
+		<set name="session.DBConn.profiles" value="{%Application.DBConn.profiles%}" />
+	</part>	
+	
+================================================================================================================
+COMPONENTS:
+
+	
+	<define-macro name="dbconn-open" attr-format="id=STRING">
+	<code>
+		if (!$GLOBALS['DBConn.pdo'][$id]) {
+			if (($id = <code get-attr="id" />) == null)
+				$id = 'default';
+			$c = {%Application.DBConn.profiles%};
+			if (!isset($c[$id]))
+				throw new Exception('D.xml:dbconn-open: unknown dbconn '.$id);
+			$c = $c[$id];
+			if ($c['vendor'] == 'mysql')
+				$GLOBALS['DBConn.pdo_'.$id] 
+					= new PDO('mysql:dbname='.$c['db'].'; host='.$c['host'], $c['username'], $c['password']);
+			else if ($c['vendor'] == 'pgsql')
+				$GLOBALS['DBConn.pdo_'.$id] 
+					= new PDO('pgsql:dbname='.$c['db'].'; host='.$c['host']; user='.$c['username'].'; password='.$c['password']);
+			else {
+				throw new Exception('D.xml:dbconn-open: don't know how create "'.$c['vendor'].'" connection');
+			}
+			$GLOBALS['DBConn.vendor_'.$id] = $c['vendor']; //simply for cache
+		}
+	</code>
+	</define-macro>
+	
+	<define-macro name="dbconn-close" attr-format="id=STRING">
+	<code>
+		if (is_object($GLOBALS['DBConn.pdo'][ <code get-attr="id"/> ]))
+			$GLOBALS['DBConn.pdo'][ <code get-attr="id"/> ]->close();
+	</code>
+	</define-macro>
+	
+	
+---sql query/perform---
+	
+	<!-- se no-results true, si può leggere Affected_Rows dentro OnQuery. Esegue in ogni caso OnEmpty, quando il risultato è vuoto 
+		 (dipende dalla query, es.: se chiedo "select count(*) from.." Affected_Rows è cmq e solo 1) -->
+	<define-macro name="foreach-recordset" attr-format="[query=STRING] [dbconn=STRING] [assoc=BOOL] [debug=BOOL] [no-results=BOOL]">
+	<code>
+		<set name="Row" value="null" />;
+		<set name="Count" value="0" />;
+		if (($id = <code get-attr="dbconn"/>) == null)
+			$id = 'default';
+		<dbconn-open id="$id" /> /* "officially" illegal */
+		$query = '';
+		if (<code has-attr="query"/>)
+			$query = <code get-attr="query"/>;
+		if (!$query &amp;&amp; <code subelement-exists="query"/>)
+			$query = <code get-subelement-content="query"/>;
+		if (<code has-attr="debug"/>) <code render="@'&lt;tt&gt;QUERY: '.htmlspecialchars($query).'&lt;tt&gt;'" />;
+		try {
+			$pdo = $GLOBALS['DBConn.pdo_'.$id];
+			$stmt = $pdo->query($query, DB_MYSQL::RETNORMAL);
+			if ($GLOBALS['DBConn.vendor_'.$id] == 'mysql') {
+				$count = $pdo->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCTH_NUM);
+				<set name="Affected_Rows" value="@(int)$count[0]" />;
+			}
+			else {
+				<set name="Affected_Rows" value="@$stmt->fetchRow()" />;
+			}
+			<sub-elements name="OnQuery" />;
+			if ({%Affected_Rows%}) {
+				if (!<code get-attr="no-results" />) {
+					$i = 0;
+					while ($row = $stmt->fetch()) {
+						<code set="Count" value="$i" />;
+						<code set="Row" value="$row"/>;
+						<sub-elements name="OnRecordFound"/>;
+						$i++;
+					}
+				}
+			}
+			else {
+				<sub-elements name="OnEmpty"/>;
+			}
+		}
+		catch (Exception $e) {
+			<code set="Exception" value="$e" />;
+			<sub-elements name="OnError" />;
+		}
+	</code>
+	</define-macro>
+	
+	<define-macro name="perform" attr-format="[query=STRING] [dbconn=STRING] [debug=BOOL]">
+	<code>
+		if (($id = <code get-attr="dbconn"/>) == null)
+			$id = 'default';
+		<dbconn-open id="$id"/> /* "officially" illegal */
+		$query = '';
+		if (<code has-attr="query"/>)
+			$query = <code get-attr="query"/>;
+		if (!$query &amp;&amp; <code subelement-exists="query"/>)
+			$query = <code get-subelement-content="query"/>;
+		if ({%debug%}) <code render="@'&lt;tt&gt;QUERY: '.htmlspecialchars($query).'&lt;tt&gt;'" />;
+		try {
+			$pdo = $GLOBALS['DBConn.pdo_'.$id];
+			$stmt = $pdo->query($query, DB_MYSQL::RETNORMAL);
+			<set name="Affected_Rows" value="@$stmt->fetchRow()" />;
+			<sub-elements name="OnSuccess" />;
+		}
+		catch (Exception $e) {
+			<code set="Exception" value="$e" />;
+			<sub-elements name="OnError" />;
+		}
+	</code>
+	</define-macro>
+	
+</dude>

@@ -1,0 +1,32 @@
+<dude>
+
+	<!--asset files="WebMasterTools_Doc.js, WebMasterTools_Doc.css" /-->
+	
+	<define-macro name="a">
+	<code>
+		if (!<code exists="context.WebMasterTools_Doc_g.currentNest" />)
+			<code set="context.WebMasterTools_Doc_g.currentNest" value="0" />;
+		$content = <code get-subelement-content="" />;
+		$id = 'DocID_'.str_replace('=', '_', base64_encode($content));
+		<code render-tag-start="li" />;
+		<code render-tag-start="a" href="javascript:WebMasterTools_Doc.toggle('$id', {%context.WebMasterTools_Doc_g.currentNest%})" />;
+		<code render="$content" />;
+		<code render-tag-end="a" />;
+		<code render-tag-end="li" />;
+		<!--code render-tag-start="script" language="javascript"/>;
+		<code render="WebMasterTools_Doc.addVoice('$id');" />;
+		<code render-tag-end="script" />;-->
+	</code>
+	</define-macro>
+	
+	<define-macro name="g">
+	<code>
+		if (!<code exists="context.WebMasterTools_Doc_g.currentNest" />)
+			<code set="context.WebMasterTools_Doc_g.currentNest" value="0" />;
+		<code set="context.WebMasterTools_Doc_g.currentNest" value="@++" />;
+		<sub-elements />;
+		<code set="context.WebMasterTools_Doc_g.currentNest" value="@--" />;
+	</code>
+	</define-macro>	
+
+</dude>

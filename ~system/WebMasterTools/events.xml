@@ -1,0 +1,7 @@
+<pippo>
+	<create-event name="html-body-start" run-on="context" />
+	
+	<part run-on="-/WebMasterTools:html-body-start">
+		<code tag-start="div" style="padding:20px" />
+	</part>
+</pippo>

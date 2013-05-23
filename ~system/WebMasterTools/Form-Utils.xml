@@ -1,0 +1,307 @@
+<dude xmlns:lib="../Base">
+
+	<asset require="WebMasterTools.php" />
+	<asset file="form-utils.js" />
+
+	<define-macro name="form-option" attr-format="[value=STRING] [selected=BOOL] [attributes=VAR]">
+	<code>
+		$m_a = '&lt;option ';
+		if (<code has-attr="value"/>)
+			$m_a .= 'value="'.htmlspecialchars({%value%}).'" ';
+		if ({%selected%})
+			$m_a .= 'selected="true" ';
+		if (is_array({%attributes%}))
+			foreach ({%attributes%} as $m_name => $m_value) {
+				if ($m_name == 'disabled' || $m_name == 'selected') {
+					if ($m_value) 
+						$m_a .= $m_name.'="true" ';
+				}
+				else {
+					$m_a .= $m_name.'="'.htmlspecialchars($m_value).'" ';
+				}
+			}
+		$m_a .= '&gt;';
+		<code render="$m_a" />;
+		<sub-elements />;
+		<code render='&lt;/option&gt;' />;
+	</code>
+	</define-macro>
+	
+	<part name="Include_Javascript">
+		<lib:when-false condition="@isset({%context.WMT_FM.scriptLoaded%})">
+			<script language="javascript" src="{%~.RootPrefix%}{%~.FilePath%}form-utils.js" />
+			<set name="context.WMT_FM.scriptLoaded" value="1" />
+		</lib:when-false>
+	</part>
+	
+	<part name="TimeSelectKit" attr-format="name=STRING value=STRING">
+		<code>
+			$h = $m = 0;
+			if ((int){%value%} > 0) {
+				list($h, $m) = explode(':', {%value%});
+				list($h, $m) = array((int)$h, (int)$m);
+			}
+		</code>
+		<capture into="hhSelect">
+			<select id="ID_{%~.UniqueID%}_hh" name="{%name%}_hh" onChange="WMT_FM_updateTime('ID_{%~.UniqueID%}')">
+				<code>
+					for ($i=0; $i &lt; 24; $i++) { 
+						if ($h == $i) {
+							<code tag-start="option" selected="true" />;
+						}
+						else {
+							<code tag-start="option" />;
+						}
+						if ($i &lt; 10) $i = '0' . $i;
+						<code render="$i" />;
+						<code tag-end="option" />;
+					}
+				</code>
+			</select>
+		</capture>	
+		<capture into="mmSelect">
+			<select id="ID_{%~.UniqueID%}_mm" name="{%name%}_mm" onChange="WMT_FM_updateTime('ID_{%~.UniqueID%}')">
+				<code>
+					for ($i=0; $i &lt; 60; $i++) { 
+						if ($m == $i) {
+							<code tag-start="option" selected="true" />;
+						}
+						else {
+							<code tag-start="option" />;
+						}
+						if ($i &lt; 10) $i = '0' . $i;
+						<code render="$i" />;
+						<code tag-end="option" />;
+					}
+				</code>
+			</select>
+		</capture>	
+		<export vars="hhSelect, mmSelect" />
+		<use part="Include_Javascript" />
+		<input id="ID_{%~.UniqueID%}" type="hidden" name="{%name%}" value="{%value%}" />
+		<sub-elements />
+	</part>
+	
+	/**
+	 * value, if present, must be in format YYYY-MM-DD
+	 *
+	 */
+	<define-macro name="empty-option" attr-format="value=STRING current-value=STRING label=STRING only-when=BOOL">
+		<code>
+			if ({%current-value%} == {%value%})
+				<code tag-start="option" value="{%value%}" selected="true" />;
+			else
+				<code tag-start="option" value="{%value%}" />;
+			<code render="{%label%}" />;
+			<code tag-end="option" />;
+		</code>
+	</define-macro>
+	<part name="DateSelectKit" attr-format="name=STRING value=STRING year-min=NUMBER year-max=NUMBER [order=STRING] [use-empty=BOOL]">
+		<code>
+			$d = $m = $y = 0;
+			if ((int){%value%} > 0) {
+				list($y, $m, $d) = explode('-', {%value%});
+				list($y, $m, $d) = array((int)$y, (int)$m, (int)$d);
+			}
+		</code>
+		<capture into="ddSelect">
+			<select id="ID_{%~.UniqueID%}_dd" name="{%name%}_dd" onChange="WMT_FM_updateDate('ID_{%~.UniqueID%}')">
+				<empty-option value="" label="--" current-value="$d" only-when="{%use-empty%}"/>
+				<code>
+					for ($i=1; $i &lt; 32; $i++) {
+						if ($d == $i) {
+							<code tag-start="option" selected="true" />;
+						}
+						else {
+							<code tag-start="option" />;
+						}
+						if ($i &lt; 10) $i = '0' . $i;
+						<code render="$i" />;
+						<code tag-end="option" />;
+					}
+				</code>
+			</select>
+		</capture>
+		<capture into="mmSelect">
+			<select id="ID_{%~.UniqueID%}_mm" name="{%name%}_mm" onChange="WMT_FM_updateDate('ID_{%~.UniqueID%}')">
+				<empty-option value="" label="--" current-value="$m" only-when="{%use-empty%}"/>
+				<code>
+					for ($i=1; $i &lt; 13; $i++) { 
+						if ($m == $i) {
+							<code tag-start="option" selected="true" />;
+						}
+						else {
+							<code tag-start="option" />;
+						}
+						if ($i &lt; 10) $i = '0' . $i;
+						<code render="$i" />;
+						<code tag-end="option" />;
+					}
+				</code>
+			</select>
+		</capture>
+		<capture into="yySelect">
+			<select id="ID_{%~.UniqueID%}_yy" name="{%name%}_yy" onChange="WMT_FM_updateDate('ID_{%~.UniqueID%}')">
+				<empty-option value="" label="----" current-value="$y" only-when="{%use-empty%}"/>
+				<code>
+					$y_min = {%year-min%};
+					$y_max = {%year-max%};
+					if (<code has-attr="order" />)
+						$order = strtolower(trim({%order%}));
+					if (!isset($order) || ($order != 'asc' &amp;&amp; $order != 'desc')) {
+						if ($y_min == date('Y'))
+							$order = 'asc';
+						else 
+							$order = 'desc';
+					}
+					if ($order == 'desc')
+					 for ($i= $y_max; $i &gt; $y_min; $i--) { 
+						if ($y == $i) {
+							<code tag-start="option" selected="true" />;
+						}
+						else {
+							<code tag-start="option" />;
+						}
+						<code render="$i" />;
+						<code tag-end="option" />;
+					 }
+					else 
+					 for ($i= $y_min; $i &lt; $y_max + 1; $i++) { 
+						if ($y == $i) {
+							<code tag-start="option" selected="true" />;
+						}
+						else {
+							<code tag-start="option" />;
+						}
+						<code render="$i" />;
+						<code tag-end="option" />;
+					 }					 
+				</code>
+			</select>
+		</capture>
+		<export vars="ddSelect, mmSelect, yySelect" />
+		<use part="Include_Javascript" />
+		<input id="ID_{%~.UniqueID%}" type="hidden" name="{%name%}" value="{%value%}" />
+		<sub-elements />
+	</part>
+	
+	<part name="SelectNum" attr-format="name=STRING value=STRING from=NUMBER to=NUMBER [custom-labels=STRING] [hide-numbers=STRING]">
+		<select name="{%name%}">
+			<code>
+				$hide_numbers = explode(',', {%hide-numbers%});
+				foreach ($hide_numbers as $h => $n) $hide_numbers[$h] = (int)$n;
+				
+				$labels = array();
+				if ({%custom-labels%} != '') {
+					$buff = explode(',', {%custom-labels%});
+					foreach ($buff as $L) {
+						list($v, $l) = explode(':', $L);
+						if (!isset($l) || !is_numeric($v)) throw new Exception("SelectNum(".{%name%}.": custom-labels attribute must be in this format: 'num:label, num:label, ..'. you given: '" . {%custom-labels%} . "'"); 
+						$labels[(int)$v] = $l;
+					}
+				}
+				if ({%from%} > {%to%}) {
+					for ($i={%from%}; $i &gt; {%to%} - 1; $i--) {
+						if (array_search($i, $hide_numbers) !== false) continue;
+						if ((int){%value%} == $i) {
+							<code tag-start="option" value="$i" selected="true" />;
+						} else {
+							<code tag-start="option" value="$i" />;
+						}
+						$v = (isset($labels[$i])) ? $labels[$i] : $i;
+						<code render="$v" />;
+						<code tag-end="option" />;
+					}
+				}
+				else {
+					for ($i={%from%}; $i &lt; {%to%} + 1; $i++) { 
+						if (array_search($i, $hide_numbers) !== false) continue;
+						if ((int){%value%} == $i) {
+							<code tag-start="option" value="$i" selected="true" />;
+						} else {
+							<code tag-start="option" value="$i" />;
+						} 
+						$v = (isset($labels[$i])) ? $labels[$i] : $i;
+						<code render="$v" />;
+						<code tag-end="option" />;
+					}
+				}
+			</code>
+		</select>
+	</part>
+	
+	/*
+	 * name: il nome del parametro form, preso con $_REQUEST
+	 * must-be:	major-of | equal | less-of
+	 * value: se string deve essere in formato convertibile da strtotime() altrimenti un timestamp PHP 
+	 *
+	 * esegue il sotto blocco in caso di ERRORE.
+	 */
+	<define-macro name="DateCheck" attr-format="name=STRING must-be=STRING value=VAR">
+		<code>
+			$time1 = strtotime($_REQUEST[{%name%}]);
+			if ($time1 === false) {
+				<sub-elements />;
+			}
+			else {
+				$time2 = (is_numeric({%value%})) ? (int){%value%} : strtotime({%value%});
+				<!--var_dump('time1:' . $time1 . ' time2:' . $time2);-->
+				switch ({%must-be%}) {
+				 case 'less-of': 
+					if ($time1 >= $time2) <sub-elements />;
+				  break;
+				 case 'equal': 
+					if ($time1 != $time2) <sub-elements />;
+				  break;
+				 case 'major-of': 
+					if ($time1 &lt;= $time2) <sub-elements />;
+				  break;
+				}
+			}
+		</code>
+	</define-macro>	
+	
+	<part name="SelectList" attr-format="name=STRING list-values=VAR [list-separator=STRING] [index-by=STRING] value=STRING">
+		<select name="{%name%}">
+		<code>
+			if (!{%list-separator%})
+				<code set="list-separator" value="," />;
+			$index_by = null;
+			if (<code has-attr="index-by" />) $index_by = trim(strtolower({%index-by%}));
+			if (<code has-attr="list-separator" />) $sep = {%list-separator%};
+			if (!$sep) $sep = ',';
+			$values = explode($sep, {%list-values%});
+			$i = 0;
+			foreach ($values as $v) {
+				$selected = '';
+				if ($index_by == 'number') {
+					if ($i == (int){%value%})
+						$selected = 'selected="true"';
+					<code render="&lt;option value='$i' $selected&gt;" />;
+					<code render="@htmlentities($v)" />;
+					<code render="&lt;/option&gt;" />;
+				}
+				else if ($index_by == 'colon') {
+					@list($value, $label) = explode(':', $v);
+					$value = trim($value);
+					if ($value == {%value%})
+						$selected = 'selected="true"';
+					if (!isset($label)) { $label = $value; $value = ''; } else { $value = 'value="'.htmlentities($value).'"'; }
+					<code render="&lt;option $value $selected&gt;" />;
+					<code render="@htmlentities($label)" />;
+					<code render="&lt;/option&gt;" />;
+				}
+				else {
+					if ({%value%} == trim($v)) 
+						$selected = 'selected="true"';
+					<code render="&lt;option $selected&gt;" />;
+					<code render="@htmlentities($v)" />;
+					<code render="&lt;/option&gt;" />;
+				}
+			}
+		</code>
+		</select>
+	</part>
+
+
+</dude>

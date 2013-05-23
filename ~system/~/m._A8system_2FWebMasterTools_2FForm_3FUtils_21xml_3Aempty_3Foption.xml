@@ -1,0 +1,10 @@
+<define-macro xmlns:lib="../Base" name="empty-option" attr-format="value=STRING current-value=STRING label=STRING only-when=BOOL">
+		<code>
+			if ({%current-value%} == {%value%})
+				<code tag-start="option" value="{%value%}" selected="true"/>;
+			else
+				<code tag-start="option" value="{%value%}"/>;
+			<code render="{%label%}"/>;
+			<code tag-end="option"/>;
+		</code>
+	</define-macro>

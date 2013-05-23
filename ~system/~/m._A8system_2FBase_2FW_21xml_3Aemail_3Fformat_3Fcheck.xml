@@ -1,0 +1,4 @@
+<define-macro name="email-format-check" attr-format="email=STRING">
+    	<code> if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", <code get-attr="email"/>)) 
+		 	{ <code sub-elements=""/>; }</code>
+	</define-macro>

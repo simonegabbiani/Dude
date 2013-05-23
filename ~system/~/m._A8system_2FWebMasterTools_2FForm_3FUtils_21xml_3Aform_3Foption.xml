@@ -1,0 +1,23 @@
+<define-macro xmlns:lib="../Base" name="form-option" attr-format="[value=STRING] [selected=BOOL] [attributes=VAR]">
+	<code>
+		$m_a = '&lt;option ';
+		if (<code has-attr="value"/>)
+			$m_a .= 'value="'.htmlspecialchars({%value%}).'" ';
+		if ({%selected%})
+			$m_a .= 'selected="true" ';
+		if (is_array({%attributes%}))
+			foreach ({%attributes%} as $m_name =&gt; $m_value) {
+				if ($m_name == 'disabled' || $m_name == 'selected') {
+					if ($m_value) 
+						$m_a .= $m_name.'="true" ';
+				}
+				else {
+					$m_a .= $m_name.'="'.htmlspecialchars($m_value).'" ';
+				}
+			}
+		$m_a .= '&gt;';
+		<code render="$m_a"/>;
+		<sub-elements/>;
+		<code render="&lt;/option&gt;"/>;
+	</code>
+	</define-macro>

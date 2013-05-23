@@ -1,0 +1,28 @@
+<dude>
+
+	<asset file="/JS/jquery.min.js" />
+
+	<part name="My-HTML-Document" attr-format="title=STRING">
+		<html lang="it">
+			<head>
+				<title>{%title%}</title>
+				<script language="javascript" src="/JS/jquery.min.js" /> <!-- dude automatically adds </script> -->
+			</head>
+			<body>
+				<h1>{%title%}</h1>
+				<hr />
+				<sub-elements name="PageContent" />
+			</body>
+		</html>
+	</part>
+	
+	<part auto-context="/index">
+		<set name="my-title" value="Hallo World" />
+		<use part="My-HTML-Document" title="{%my-title%}">
+			<PageContent>
+				<p>This is the content of the page</p>
+			</PageContent>
+		</use>
+	</part>
+
+</dude>

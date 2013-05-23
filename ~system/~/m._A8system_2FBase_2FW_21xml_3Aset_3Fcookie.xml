@@ -1,0 +1,21 @@
+<define-macro name="set-cookie" attr-format="name=STRING value=STRING [expires=STRING] [path=STRING] [domain=STRING] [secure=BOOL]">
+	<code>
+		if (!<code has-attr="expires"/>) {
+			$m_i = 0;
+		}
+		else {
+			$m_i = (int)<code get-attr="expires"/>;
+			switch( $m_x = substr(<code get-attr="expires"/>, -1) ) {
+			 case 'y': $m_i = mktime(0, 0, 0, 0, 0, $m_i); break;
+			 case 'm': $m_i = mktime(0, 0, 0, 0, $m_i); break;
+			 case 'w': $m_i = mktime(0, 0, 0, $m_i * 7); break;
+			 case 'd': $m_i = mktime(0, 0, 0, $m_i); break;
+			 case 'h': $m_i = mktime($m_i); break;
+			 default: throw new Exception('set-cookie expires unrecognized type: \'' . $m_x . '\'');
+			}
+		}
+		setcookie(<code get-attr="name"/>, <code get-attr="value"/>, 
+			$m_i, <code get-attr="path"/>, <code get-attr="domain"/>, 
+			<code get-attr="secure"/>);
+	</code>
+	</define-macro>

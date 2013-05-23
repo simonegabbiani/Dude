@@ -1,0 +1,14 @@
+<define-macro name="check-box" attr-format="name=STRING value=STRING checked=BOOL [style=STRING] [id=STRING] [label=STRING] [onchange=STRING]">
+	<code>
+		$attr = ''; $id = ''; $label = '';
+		if (<code has-attr="onchange"/>) $attr .= 'onChange="'.htmlentities({%onchange%}).'" ';
+		if (<code has-attr="style"/>) $attr .= 'style="'.htmlentities({%style%}).'" ';
+		if (<code has-attr="id"/>) { $id = {%id%}; $attr .= 'id="'.htmlentities({%id%}).'" '; }
+		if (<code has-attr="label"/>) $label = htmlentities({%label%});
+		if ({%checked%}) $attr .= 'checked="true" ';
+		if ($label &amp;&amp; !$id) { $id = "id_" . mt_rand(); $attr .= "id=\"$id\" "; }
+		<code render="&lt;input type='checkbox' name='{%name%}' value='{%value%}' $attr /&gt;"/>;
+		if ($label) 
+			<code render="&lt;label for='$id'&gt;{$label}&lt;/label&gt;"/>;
+	</code>
+	</define-macro>

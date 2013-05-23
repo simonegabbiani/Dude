@@ -1,0 +1,61 @@
+<dude xmlns:lib="~/Base/">
+
+	<asset create-require="custom-code.php" />
+	
+	<define-descriptor name="crudConfig" attr-format="[dbconn-profile=STRING]">
+		<code sub-elements="" />
+	</define-descriptor>
+	
+	<part name="crudConfigHandler" run-on="application-start" for-handling-descriptor="crudConfig" attr-format="f=STRING x=VAR c=NUMBER d=NUMBER">
+		<!-- è solo una prova. potrà essere fatto convergendo direttamente in mysql -->
+		<code>
+			echo "crudConfiguration:handler started on-application-start";
+			if (!<code exists="Application.CRUD.tables" />)
+				$tables = array();
+			else
+				$tables = {%Application.CRUD.tables%};
+			if (($db = {%x%}->getAttribute('dbconn-profile')) == null) 
+				$db = 'default';
+			//tables
+			$mysql = '';
+			foreach ({%x%}->childNodes as $xc) {
+				if (strtolower($xc->tagName) != 'table') continue;
+				$t = $xc->getAttribute('name');
+				if (isset($tables[ $t ]) &amp;&amp; {%c%} > 1)
+					throw new UserConfigurationError('CRUD: table '.$t.' already defined. Check usages for descriptor &lt;crudConfig&gt;');
+				$tables[ $t ] = array();
+				//columns
+				foreach ($xc->childNodes as $xcc) {
+					if (strtolower($xcc->tagName) != 'col') continue;
+					$col = $xcc->getAttribute('name');
+					$tables[ $t ][ $col ] = @array('type' => $xcc->getAttribute('type'), 'len' => $xcc->getAttribute('len'));
+				}
+			}
+			<code set="Application.CRUD.tables" value="$tables" />;
+			<code set="Application.CRUD.dbconnProfile" value="$db" />;
+			$app = serialize(array('tables'=>$tables, 'dbconn'=>$db)); 
+			$out_file = {%~.RootPrefix%}.'lib/'.{%f%}.'__'.{%~.EncodedFileName%}.'__custom-code.php';
+		</code>
+	</part>
+
+	<part name="crudShow" attr-format="table=STRING">
+		<code>
+			$a = {%Application.CRUD.tables%};
+			if (!isset($a[{%table%}]))
+				throw new ConfigurationErrorException('CRUD: table '.{%table%}.' not configured');
+		</code>
+		<lib:foreach-recordset query="select * from {%table%}" as="R">
+			<OnRecordFound>
+				<li><code render="@{%R.Row%}['name']"/></li>
+			</OnRecordFound>
+			<OnEmpty>
+				vuoto
+			</OnEmpty>
+			<OnError>
+				mysql error:<code render="@mysql_error()" />
+			</OnError>
+		</lib:foreach-recordset>
+	</part>
+
+
+</dude>

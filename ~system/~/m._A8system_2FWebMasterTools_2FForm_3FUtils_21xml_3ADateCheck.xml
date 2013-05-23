@@ -1,0 +1,23 @@
+<define-macro xmlns:lib="../Base" name="DateCheck" attr-format="name=STRING must-be=STRING value=VAR">
+		<code>
+			$time1 = strtotime($_REQUEST[{%name%}]);
+			if ($time1 === false) {
+				<sub-elements/>;
+			}
+			else {
+				$time2 = (is_numeric({%value%})) ? (int){%value%} : strtotime({%value%});
+				<!--var_dump('time1:' . $time1 . ' time2:' . $time2);-->
+				switch ({%must-be%}) {
+				 case 'less-of': 
+					if ($time1 &gt;= $time2) <sub-elements/>;
+				  break;
+				 case 'equal': 
+					if ($time1 != $time2) <sub-elements/>;
+				  break;
+				 case 'major-of': 
+					if ($time1 &lt;= $time2) <sub-elements/>;
+				  break;
+				}
+			}
+		</code>
+	</define-macro>

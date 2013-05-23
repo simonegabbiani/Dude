@@ -1,0 +1,20 @@
+<dude>
+
+	<define-macro name="edit-spot" attr-format="part=STRING [coords=VAR] [path=STRING] [title=STRING] [desc=STRING]">
+	<code>
+		if (isset($_SESSION['dude-edit']) &amp;&amp; $_SESSION['dude-edit'] == 'allow') {
+			$m_file = urlencode(<code get-attr="part"/>);
+			if (is_array(<code get-attr="coords"/>))
+				$m_coords = urlencode(join(',',<code get-attr="coords"/>));
+			else
+				$m_coords = '';
+			$m_path = urlencode(<code get-attr="path"/>);
+			$m_title = urlencode(<code get-attr="title"/>);
+			$m_desc = urlencode(<code get-attr="desc"/>);
+			$m_project = urlencode(PROJECT_NAME);
+			<code render="&lt;a href='{%~.RootPrefix%}../../~system/~bin/edit/edit-source.php?p=$m_project&amp;cmp=$m_file&amp;path=$m_path&amp;coords=$m_coords&amp;title=$m_title&amp;desc=$m_desc'&gt;[edit-source]&lt;/a&gt;" />;
+		}
+	</code>
+	</define-macro>
+
+</dude>

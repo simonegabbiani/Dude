@@ -1,0 +1,100 @@
+﻿<dude>
+
+	<define-macro name="http-redirect" attr-format="url=STRING [only-when=BOOL]">
+		<code>
+			if (!<code get-attr="url"/>) throw new Exception('HTTP-REDIRECT: No URL given.');
+			if (!<code has-attr="only-when"/> || <code get-attr="only-when"/>) { echo '&lt;a href="'.<code get-attr="url" />.'"&gt;redirect&lt;/a&gt;'; die('Location:'.<code get-attr="url" />); die('redirected to'.<code get-attr="url" />); }
+		</code>
+	</define-macro>
+
+	<define-macro name="http-request-post" attr-format="[only-when=BOOL]">
+		<code>
+			if (!<code has-attr="only-when"/> || <code get-attr="only-when"/>) { <sub-elements name="" />; } 
+		</code>
+	</define-macro>
+
+	
+	<define-macro name="password-check" attr-format="password=STRING repeat=STRING min-length=NUMBER"> 
+	<!-- TODO: min-numbers, min-alphabeticals, min-uppercases, no-similar-to, similar-algorythm -->
+		<code>if (<code get-attr="password" /> != <code get-attr="repeat" /> 
+			|| strlen(<code get-attr="password" />) &lt; <code get-attr="min-length"/>) 
+			{ <code sub-elements="" />; } </code>
+	</define-macro>
+	
+	<define-macro name="email-format-check" attr-format="email=STRING">
+    	<code> if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/", <code get-attr="email" />)) 
+		 	{ <code sub-elements="" />; }</code>
+	</define-macro>
+	
+	<define-macro name="field-check" attr-format="value=ANY [strlen=NUMBER]">
+		<code>if (<code has-attr="strlen"/> &amp;&amp; strlen(<code get-attr="value" />) &lt; <code get-attr="strlen"/>) 
+			{ <code sub-elements="" />; } </code>
+	</define-macro>
+
+	<!-- qui un date-check generico è da fare, ce n'è già uno in WebMasterTools specifico per velocizzare
+		  interazione tra i suoi componenti e i database -->
+
+	/**
+	 * Asyncronous echo messages. (This macro has sense WITHOUT output buffering.)
+	 *
+	 */
+	<define-macro name="echo" attr-format="msg=STRING">
+		<code>echo {%~.PartName%}.': '.<code get-attr="msg" />;</code>
+	</define-macro>
+	
+	/**
+	 * set-cookie
+	 *
+	 * expires:  Nx (optional, if omitted follow the PHP setcookie specifications)
+	 * where:	 N = a number, eg 24
+	 *			 x = y | m | w | d | h respectively years, months, week (7 days multiplier), days and hours
+	 *
+	 * examples:
+	 * set-cookie name="keep-logged-in" value="user@email.abc" expires="14d"
+	 * 
+	 */
+	<!-- son rimasto qua: c'è un errore in has-attr, riporta true quando invece non ci sono.. -->
+	<define-macro name="set-cookie" attr-format="name=STRING value=STRING [expires=STRING] [path=STRING] [domain=STRING] [secure=BOOL]">
+	<code>
+		if (!<code has-attr="expires" />) {
+			$m_i = 0;
+		}
+		else {
+			$m_i = (int)<code get-attr="expires" />;
+			switch( $m_x = substr(<code get-attr="expires" />, -1) ) {
+			 case 'y': $m_i = mktime(0, 0, 0, 0, 0, $m_i); break;
+			 case 'm': $m_i = mktime(0, 0, 0, 0, $m_i); break;
+			 case 'w': $m_i = mktime(0, 0, 0, $m_i * 7); break;
+			 case 'd': $m_i = mktime(0, 0, 0, $m_i); break;
+			 case 'h': $m_i = mktime($m_i); break;
+			 default: throw new Exception('set-cookie expires unrecognized type: \'' . $m_x . '\'');
+			}
+		}
+		setcookie(<code get-attr='name'/>, <code get-attr='value'/>, 
+			$m_i, <code get-attr='path'/>, <code get-attr='domain'/>, 
+			<code get-attr="secure" />);
+	</code>
+	</define-macro>
+	
+	<define-macro name="delete-cookie" attr-format="name=STRING">
+	<code>
+		setcookie(<code get-attr="name" />, '', -3600);
+	</code>
+	</define-macro>
+	
+	<define-macro name="check-box" attr-format="name=STRING value=STRING checked=BOOL [style=STRING] [id=STRING] [label=STRING] [onchange=STRING]">
+	<code>
+		$attr = ''; $id = ''; $label = '';
+		if (<code has-attr='onchange' />) $attr .= 'onChange="'.htmlentities({%onchange%}).'" ';
+		if (<code has-attr='style' />) $attr .= 'style="'.htmlentities({%style%}).'" ';
+		if (<code has-attr='id' />) { $id = {%id%}; $attr .= 'id="'.htmlentities({%id%}).'" '; }
+		if (<code has-attr='label' />) $label = htmlentities({%label%});
+		if ({%checked%}) $attr .= 'checked="true" ';
+		if ($label &amp;&amp; !$id) { $id = "id_" . mt_rand(); $attr .= "id=\"$id\" "; }
+		<code render="&lt;input type='checkbox' name='{%name%}' value='{%value%}' $attr /&gt;" />;
+		if ($label) 
+			<code render="&lt;label for='$id'&gt;{$label}&lt;/label&gt;" />;
+	</code>
+	</define-macro>
+
+</dude>

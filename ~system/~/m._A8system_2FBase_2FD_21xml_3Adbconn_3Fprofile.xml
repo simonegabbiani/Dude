@@ -1,0 +1,3 @@
+<define-descriptor xmlns:env="http://dudenvironment.org/Environment" name="dbconn-profile" attr-format="[id=STRING] username=STRING (password=STRING | enc-password=STRING) host=STRING db=STRING vendor=STRING" cache="application">
+			<code sub-elements=""/>
+	</define-descriptor>

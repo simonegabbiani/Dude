@@ -1,0 +1,37 @@
+<dude>
+
+	#
+	# Filesystem 
+	#
+	
+	<define-macro name="foreach-file" attr-format="[path=STRING]">
+	<code>
+		if (($dir = <code get-attr="path"/>) == null)
+			$id = '.';
+		if (!file_exists($dir) || !is_dir($dir)) {
+			<sub-elements name="OnPathError" />;
+		}
+		else {
+			$c = 0;
+			$dir = new DirectoryIterator($dir);
+			foreach ($dir as $f) {
+				<code set="name" value="@$f->getFilename()" />;
+				if ($f->isFile()) {
+					<sub-elements name="OnFileFound" />;
+				} 
+				else if ($f->isDir()) {
+					<sub-elements name="OnDirectoryFound" />;
+				}
+				else {
+					<sub-elements name="OnUnknown" />;
+				}
+				$c++;
+			}
+			if ($c == 0) {
+				<sub-elements name="OnEmpty" />;
+			}
+		}
+	</code>
+	</define-macro>
+
+</dude>

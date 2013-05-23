@@ -1,0 +1,10 @@
+<define-macro name="foreach" attr-format="hash=VAR">
+	<code>
+		foreach(<code get-attr="hash"/> as $m_k =&gt; $m_v) {
+			<code set="key" value="45"/>;
+			<code set="value" value="$m_v"/>;
+			<export vars="key, value"/>
+			<sub-elements/>;
+		}
+	</code>
+	</define-macro>

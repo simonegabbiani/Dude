@@ -1,0 +1,23 @@
+<define-macro xmlns:env="http://dudenvironment.org/Environment" name="perform" attr-format="[query=STRING] [dbconn=STRING] [debug=BOOL]">
+	<code>
+		if (($id = <code get-attr="dbconn"/>) == null)
+			$id = 'default';
+		<dbconn-open id="$id"/> /* "officially" illegal */
+		$query = '';
+		if (<code has-attr="query"/>)
+			$query = <code get-attr="query"/>;
+		if (!$query &amp;&amp; <code subelement-exists="query"/>)
+			$query = <code get-subelement-content="query"/>;
+		if ({%debug%}) <code render="@'&lt;tt&gt;QUERY: '.htmlspecialchars($query).'&lt;tt&gt;'"/>;
+		try {
+			$pdo = $GLOBALS['DBConn.pdo_'.$id];
+			$stmt = $pdo-&gt;query($query, DB_MYSQL::RETNORMAL);
+			<set name="Affected_Rows" value="@$stmt-&gt;fetchRow()"/>;
+			<sub-elements name="OnSuccess"/>;
+		}
+		catch (Exception $e) {
+			<code set="Exception" value="$e"/>;
+			<sub-elements name="OnError"/>;
+		}
+	</code>
+	</define-macro>

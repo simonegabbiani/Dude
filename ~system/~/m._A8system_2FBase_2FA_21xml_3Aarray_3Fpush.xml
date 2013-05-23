@@ -1,0 +1,5 @@
+<define-macro name="array-push" attr-format="var=VAR value=VAR">
+		<code>
+			{%var%}[] = {%value%};
+		</code>
+	</define-macro>

@@ -1,0 +1,78 @@
+<!-- DHTML5 (Dude HTML5) -->
+<dude>
+
+	<asset file="dhtml5.css" />
+	<set name="application.jquery.lastversion" value="1.9.2" />
+	
+	/**
+	 * HTML5_Base_Doc
+	 *
+	 * HTML document ready for last version of jQuery.
+	 *
+	 * This basic document does not give support for Mobile
+	 * device resolutions so you have to support them via CSS
+	 * media queries and/or javascript.
+	 *
+	 * This is the "base document" from which you define you 
+	 * site templates. See "Wix-Style-Page" for an example.
+	 *
+	 *
+	 * Sub-elements: title, custom-head-tags, content, javascript
+	 *
+	 */
+	<part name="Page_DHTML5" attr-format="[body-class=STRING] [body-style=STRING] [google-analytics=STRING]">
+		&lt;DOCTYPE html&gt;
+		<comment if="lt IE 7">	<code tag-start="html" class="no-js lt-ie9 lt-ie8 lt-ie7"/> </comment>
+		<comment if="IE 7">     <code tag-start="html" class="no-js lt-ie9 lt-ie8"/> </comment>
+		<comment if="IE 8">     <code tag-start="html" class="no-js lt-ie9"/>	</comment>
+		<comment if="gt IE 8">	<code tag-start="html" class="no-js"/> </comment>
+		<html lang="{%session.dhtml5.lang%}">
+		<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+				<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title><sub-elements name="title" /></title>
+        &lt;!-- Thanks to HTML5 Boilerplate - http://html5boilerplate.com/ --&gt;
+        <link rel="stylesheet" href="normalize.css">
+				<link rel="stylesheet" href="dhtml5.css" />
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+				<sub-elements name="custom-head-tags"/>
+			</head>
+			<body style="{%body-style%}" class="{%body-class%}">
+	      <html-comment if="lt IE 7">
+        	<p class="chromeframe">You are using an <strong>outdated</strong> browser. 
+        	Please <a href="http://browsehappy.com/">upgrade your browser</a>.</p>
+        <html-comment>
+  			<sub-elements name="content" />
+  			<script src="//ajax.googleapis.com/ajax/libs/jquery/{%application.jquery-lastversion%}/jquery.min.js"></script>
+      	<script>window.jQuery || document.write('<script src="jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="plugins.js"></script>
+	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+				<script type="text/javascript" src="jquery.dhtml5.js" />
+				<script type="text/javascript"><sub-elements name="javascript" /></script>
+				<code> if ({%google-analytics%} != null) { </code>
+					<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+					<script>
+							var _gaq=[['_setAccount','UA-{%google-analytics%}'],['_trackPageview']];
+							(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+							g.src='//www.google-analytics.com/ga.js';
+							if (('{%google-analytics%}').toLowerCase() != 'test') {
+								s.parentNode.insertBefore(g,s)}(document,'script'));
+							}
+					</script>
+				<code> } </code>
+			</body>
+		</html>
+	</part>
+
+	<!-- F.A.Q.
+	
+	1. il cliente vuole installare un plugin per jquery o un qualunque componente trovato sul web, come può fare?
+	
+	R. può usare uno di quelli che abbiamo fatto trovare già pronti all'uso oppure può installarrlo manualmente
+	   ma deve imparare il linguaggio + dovrà manualmente installarlo ovunque, non potrà automatizzarlo se non
+	   creando una sua automazione proprio come io ho creato quella che mette a disposizione plugin preconfigurati
+
+	-->
+	
+</dude>

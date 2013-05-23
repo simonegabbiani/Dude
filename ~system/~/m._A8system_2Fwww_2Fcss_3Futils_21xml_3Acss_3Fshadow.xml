@@ -1,0 +1,18 @@
+<define-macro name="css-shadow" attr-format="[x=STRING] [y=STRING] [size=STRING] [weight=NUMBER]">
+	<code>
+		if ({%x%} == null) <code set="x" value="5px"/>;
+		if ({%y%} == null) <code set="y" value="5px"/>;
+		if ({%size%} == null) <code set="size" value="10px"/>;
+		if ({%weight%} == null) <code set="weight" value="75"/>;
+		$w = (int)(255 * (1 - {%weight%} / 100)); 
+		$buffer = 
+			"box-shadow:".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);"
+			. "-moz-box-shadow: ".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);"
+			. "-webkit-box-shadow: ".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);"
+			. "-o-box-shadow: ".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);";
+		$w = dechex((int)($w / 2));
+		$buffer .=
+			"filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=".{%x%}.", OffY=".{%y%}.", Color='#{$w}000000');";
+		<code render="$buffer"/>;
+	</code>
+	</define-macro>

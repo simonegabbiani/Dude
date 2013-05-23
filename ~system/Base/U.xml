@@ -1,0 +1,22 @@
+<dude>
+
+	#
+	# U.xml
+	#
+
+	/**
+	 * description (unhandled, for future use)
+	 *
+	 *
+	 */
+	<define-descriptor name="description"><code sub-elements=""/></define-descriptor>
+	
+	
+	/**
+	 * Generic data definition
+	 *
+	 *
+	 */
+	<define-descriptor name="data"><code sub-elements="" /></define-descriptor>	 
+
+</dude>

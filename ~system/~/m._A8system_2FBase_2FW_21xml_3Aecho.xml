@@ -1,0 +1,3 @@
+<define-macro name="echo" attr-format="msg=STRING">
+		<code>echo {%~.PartName%}.': '.<code get-attr="msg"/>;</code>
+	</define-macro>

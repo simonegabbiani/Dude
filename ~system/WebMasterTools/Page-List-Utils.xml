@@ -1,0 +1,18 @@
+<dude>
+
+	<part name="Page-List" attr-format="size=NUMBER max=NUMBER current=NUMBER">
+		<code>
+			{%size%} = min({%size%}, 3);
+			$first = min({%max%}, max(0, {%current%} - ceil({%size%} / 2)));
+			for ($i = 0; $i &lt; {%size%} &amp;&amp; $i &lt; {%max%}; $i++) {
+				<set name="PageNumber" value="@$i + $first" />;
+				<export var="PageNumber" />
+				if ({%PageNumber%} == {%current%})
+					<sub-elements name="Selected" />;
+				else
+					<sub-elements name="Unselected" />;
+			}
+		</code>
+	</part>
+
+</dude>

@@ -1,0 +1,5 @@
+<define-macro name="http-request-post" attr-format="[only-when=BOOL]">
+		<code>
+			if (!<code has-attr="only-when"/> || <code get-attr="only-when"/>) { <sub-elements name=""/>; } 
+		</code>
+	</define-macro>

@@ -1,0 +1,3 @@
+<define-descriptor xmlns:lib="~/Base/" name="crudConfig" attr-format="[dbconn-profile=STRING]">
+		<code sub-elements=""/>
+	</define-descriptor>

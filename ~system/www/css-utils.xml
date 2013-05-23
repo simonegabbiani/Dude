@@ -1,0 +1,94 @@
+<dude>
+
+	/**
+	* css-shadow
+	* 
+	* CSS rule for defining simple box shadows
+	* 
+	*/
+	<define-macro name="css-shadow" attr-format="[x=STRING] [y=STRING] [size=STRING] [weight=NUMBER]">
+	<code>
+		if ({%x%} == null) <code set="x" value="5px" />;
+		if ({%y%} == null) <code set="y" value="5px" />;
+		if ({%size%} == null) <code set="size" value="10px" />;
+		if ({%weight%} == null) <code set="weight" value="75" />;
+		$w = (int)(255 * (1 - {%weight%} / 100)); 
+		$buffer = 
+			"box-shadow:".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);"
+			. "-moz-box-shadow: ".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);"
+			. "-webkit-box-shadow: ".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);"
+			. "-o-box-shadow: ".{%x%}." ".{%y%}." ".{%size%}." rgb($w, $w, $w);";
+		$w = dechex((int)($w / 2));
+		$buffer .=
+			"filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=".{%x%}.", OffY=".{%y%}.", Color='#{$w}000000');";
+		<code render="$buffer" />;
+	</code>
+	</define-macro>
+		
+		
+	/**
+	* css-gradient
+	*
+	* Simple gradient with n.2 colors and direction vertical/horizontal/45deg/-45deg.
+	* Only linear gradient supported, for now, so the 'align' attribute is ignored.
+	*
+	* @color1 or @color2 can be 'transparent' or simply unspecified. 
+	* For partially transparent values use rgba(r,g,b,alfa)
+	*
+	* @direction can be 'h---' 'v---', e.g. 'vertical', 'v' or 'vertigo' means always 'vertical'.
+	* for 45deg use '/'. for -45deg use '\'.
+	*
+	*/
+	<define-macro name="css-gradient" attr-format="[color1=STRING] [color2=STRING] [direction=STRING] [mode=STRING] [align=STRING]">
+	<code>
+		if (!{%color1%} &amp;&amp; !{%color2%}) 
+			<code set="color1" value="#369" />;
+		else if ({%color1%} == null || strtolower({%color1%}) == 'transparent') 
+			<code set="color1" value="rgba(0,0,0,0)" />;
+		if ({%color2%} == null || strtolower({%color2%}) == 'transparent') 
+			<code set="color2" value="rgba(0,0,0,0)" />;
+		
+		if ({%direction%} == null)
+			<code set="direction" value="v" />;
+		else
+			<code set="direction" value="@strtolower(strpos({%direction%}, 0, 1))" />;	
+			
+		if ({%direction%} == 'v') {
+			$p1 = 'top';
+			$p2 = 'left top, left bottom';
+			$p3 = 'to bottom';
+		}
+		else if ({%direction%} == 'h') {
+			$p1 = 'left';
+			$p2 = 'left top, right top';
+			$p3 = 'top';
+		}
+		else if ({%direction%} == '/') {
+			$p1 = '-45deg';
+			$p2 = 'left top, right bottom';
+			$p3 = '135deg';
+		}
+		else if ({%direction%} == ord(92)) {
+			$p1 = '45deg';
+			$p2 = 'left bottom, right top';
+			$p3 = '45deg';
+		}
+	
+		if ({%mode%} == null)
+			<code set="mode" value="linear" />;
+		
+		$buffer = 
+			"background: -moz-".{%mode%}."-gradient($p1, ".{%color1%}." 0%, ".{%color2%}." 100%);" 
+			. "background: -webkit-gradient(".{%mode%}.", $p2, color-stop(0%,".{%color1%}."), color-stop(100%, ".{%color2%}."));" 
+			. "background: -webkit-".{%mode%}."-gradient($p1, ".{%color1%}." 0%, ".{%color2%}." 100%);" 
+			. "background: -o-".{%mode%}."-gradient($p1, ".{%color1%}." 0%, ".{%color2%}." 100%);" 
+			. "background: -ms-".{%mode%}."-gradient($p1, ".{%color1%}." 0%, ".{%color2%}." 100%);"
+			. "background: ".{%mode%}."-gradient($p3, ".{%color1%}." 0%, ".{%color2%}." 100%);"
+			. "filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".{%color1%}."', endColorstr='".{%color2%}."',GradientType=".((int){%direction%}=='h').");"; 
+	
+		<code render="$buffer" />;
+	</code>
+	</define-macro>
+		
+		
+</dude>

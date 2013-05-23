@@ -1,0 +1,4 @@
+<define-macro name="field-check" attr-format="value=ANY [strlen=NUMBER]">
+		<code>if (<code has-attr="strlen"/> &amp;&amp; strlen(<code get-attr="value"/>) &lt; <code get-attr="strlen"/>) 
+			{ <code sub-elements=""/>; } </code>
+	</define-macro>

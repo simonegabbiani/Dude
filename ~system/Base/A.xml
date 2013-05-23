@@ -1,0 +1,121 @@
+﻿<dude>
+
+	<!--
+	The "A" package is dedicated to commons language instructions. These could be used to help
+	your packages to be more "PHP independent", provisioning future portings to other technologies.
+	-->
+
+	/**
+	 * array-push
+	 *
+	 *
+	 */
+	<define-macro name="array-push" attr-format="var=VAR value=VAR">
+		<code>
+			{%var%}[] = {%value%};
+		</code>
+	</define-macro>
+	 
+	/**
+	 * array-push
+	 *
+	 *
+	 */
+	<define-macro name="array-push-ref" attr-format="var=VAR value=VAR">
+		<code>
+			{%var%}[] =&amp; {%value%};
+		</code>
+	</define-macro>
+
+	/**
+	 * array-unset
+	 *
+	 *
+	 */
+	<define-macro name="array-unset" attr-format="var=VAR key=VAR">
+		<code>
+			unset({%var%}[{%key%}];
+		</code>
+	</define-macro>
+	 
+	/**
+	 * array-set
+	 *
+	 * NOTE: the "key" is defined VAR so the exactly data type or type constant is mantained in the key valorization.
+	 *
+	 * Examples:
+	 * <!--
+	 * <array-set var="{%dest-array%}" key="123" value="hallo world"> 				result is:	$a[123] = 'hallo world'; 
+	 * <array-set var="{%dest-array%}" key="hallo world" value="123"> 				result is:	$a['hallo world'] = 123; 
+	 * <array-set var="{%dest-array%}" key="hallo world" value="(string)123"> 		result is:	$a['hallo world'] = '(string)123'; 	//pay attention
+	 * <array-set var="{%dest-array%}" key="hallo world" value="@(string)123"> 	result is:	$a['hallo world'] = (string)123;   	//this is the right way
+	 * <array-set var="{%dest-array%}" key="hallo world" value="@'123'"> 			result is:	$a['hallo world'] = '123';				//idem
+	 * <array-set var="{%dest-array%}" key="{%myKey%}" value="{%myValue%}"> 		result is:	$a[$b] = $c; 
+	 * -->
+	 */
+	<define-macro name="array-set" attr-format="var=VAR key=VAR value=VAR">
+		<code>
+			{%var%}[{%key%}] = {%value%};
+		</code>
+	</define-macro>
+	 
+	/**
+	 * array-set
+	 *
+	 *
+	 */
+	<define-macro name="array-set-ref" attr-format="var=VAR key=VAR value=VAR">
+		<code>
+			{%var%}[{%key%}] =&amp; {%value%};
+		</code>
+	</define-macro>
+
+	/**
+	 * foreach 
+	 * 
+	 *
+	 */
+	<define-macro name="foreach" attr-format="hash=VAR">
+	<code>
+		foreach(<code get-attr="hash" /> as $m_k => $m_v) {
+			<code set="key" value="45" />;
+			<code set="value" value="$m_v" />;
+			<export vars="key, value" />
+			<sub-elements/>;
+		}
+	</code>
+	</define-macro>
+	
+	/**
+	 * when
+	 *
+	 *
+	 */
+	<define-macro name="when" attr-format="condition=ANY">
+	<code>
+		if (<code get-attr="condition" />) {
+			<sub-elements name="true"/>;
+		}
+		else {
+			<sub-elements name="false"/>;
+		}
+	</code>
+	</define-macro>
+	
+	<define-macro name="when-true" attr-format="condition=ANY">
+	<code>
+		if (<code get-attr="condition" />) {
+			<sub-elements name=""/>;
+		}
+	</code>
+	</define-macro>
+
+	<define-macro name="when-false" attr-format="condition=ANY">
+	<code>
+		if (!(<code get-attr="condition" />)) {
+			<sub-elements name=""/>;
+		}
+	</code>
+	</define-macro>
+
+</dude>

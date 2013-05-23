@@ -1,0 +1,6 @@
+<define-macro name="http-redirect" attr-format="url=STRING [only-when=BOOL]">
+		<code>
+			if (!<code get-attr="url"/>) throw new Exception('HTTP-REDIRECT: No URL given.');
+			if (!<code has-attr="only-when"/> || <code get-attr="only-when"/>) { echo '&lt;a href="'.<code get-attr="url"/>.'"&gt;redirect&lt;/a&gt;'; die('Location:'.<code get-attr="url"/>); die('redirected to'.<code get-attr="url"/>); }
+		</code>
+	</define-macro>

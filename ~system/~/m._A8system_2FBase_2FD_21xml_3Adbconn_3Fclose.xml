@@ -1,0 +1,6 @@
+<define-macro xmlns:env="http://dudenvironment.org/Environment" name="dbconn-close" attr-format="id=STRING">
+	<code>
+		if (is_object($GLOBALS['DBConn.pdo'][ <code get-attr="id"/> ]))
+			$GLOBALS['DBConn.pdo'][ <code get-attr="id"/> ]-&gt;close();
+	</code>
+	</define-macro>
