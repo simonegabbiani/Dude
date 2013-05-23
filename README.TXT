@@ -3,12 +3,12 @@ http://dudephp.blogspot.com (Italian Blog)
 the "Dude" php framework builder.
 
 
-/~system/~bin									core files
-/~system/~bin/build-index.php				your experience with "dude" starts here
-/~system/~runtime/							files copied in the compiled-runtime version of every project (under its ~run folder, you will see..)
-/~system/~/										internal use (library cache)
-/~system/...									the libraries (Base, WWW, WebMaterTools, etc.)
-/HalloWorld.prj								the "Hallo World" project
+/~system/~bin			core files
+/~system/~bin/build-index.php	your experience with "dude" starts here
+/~system/~runtime/		files copied in the compiled-runtime version of every project (under its ~run folder, you will see..)
+/~system/~/			internal use (library cache)
+/~system/...			the libraries (Base, WWW, WebMaterTools, etc.)
+/HalloWorld.prj			the "Hallo World" project
 
 
 1. Download the repository as ZIP file from Github
