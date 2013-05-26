@@ -83,6 +83,10 @@ class Expr {
 					if ($for == self::FOR_EXISTS) return '1';
 					$result = 'self::PART_NAME'; //brackets ok
 				}
+				if ($_v == 'alias') {
+					if ($for == self::FOR_EXISTS) return '1';
+					$result = '$this->alias'; //brackets ok
+				}
 				else if ($_v == 'coordinates') {
 					if ($for == self::FOR_EXISTS) return '1';
 					$result = '' . $p->coreParser->curr_coord_n . ',' . $p->coreParser->curr_coord_s . ''; 

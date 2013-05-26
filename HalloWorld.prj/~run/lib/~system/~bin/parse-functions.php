@@ -22,7 +22,7 @@ abstract class ParseFunctions {
 		self::append(self::PHP_CODE, $p, $buffer, "\n\t\$DS_C = " . TODO::bindPartAttributes($p, $c, $e) . ";\n");
 		//else
 		//self::append(self::PHP_CODE, $p, $buffer, "\n\t\$DS_C = " . TODO::bindAnyAttribute($p, $e) . ";\n");
-		self::append(self::PHP_CODE, $p, $buffer, "\t\$this->P[$index] = \$this->get(\$this, $index, '$partUseName'); \$this->P[$index]->main(\$CONTEXT, \$DS_C, \$this);\n"); //fare tutto in apply_piece, dove vanno passati gli attributi
+		self::append(self::PHP_CODE, $p, $buffer, "\t\$this->P[$index] = \$this->get(\$this, $index, '$partUseName', '".addcslashes($p->part['alias'], '\'')."'); \$this->P[$index]->main(\$CONTEXT, \$DS_C, \$this);\n"); //fare tutto in apply_piece, dove vanno passati gli attributi
 	}
 
 	const SUBELEM_RENDER = 0;
@@ -111,7 +111,17 @@ abstract class ParseFunctions {
 			$p->code++;
 			$closeInfo->wasCode = true;
 			// * tag-start|tag-end
-			if (($v = $n->getAttribute('tag-start')) || ($v = $n->getAttribute('render-tag-start'))) {
+			$vc = '';
+			if (($v = $n->getAttribute('tag-start')) || ($v = $n->getAttribute('render-tag-start')) || ($vc = $n->getAttribute('tag')) || ($vc = $n->getAttribute('render-tag'))) {
+				if ($vc != '') {
+					//I COULD get xml content of the node and process with resolveSymbols BUT the users could think
+					//that all macros and parts inside of that content would be normally accepted/processed but they are not!
+					//So explicitly deny any content.
+					if ($n->childNodes->length > 0)
+						throw_xml($n, 'UnsupportedFeatureException', 'Please use start-tag and end-tag for this kind of content. tag or render-tag is intended only for a single "closed" tag, e.g. <input />');
+					$v = $vc; 
+					$vc = '/';
+				}
 				$c = '';
 				try {
 					for ($i = 0; $i < $n->attributes->length; $i++) {
@@ -122,7 +132,7 @@ abstract class ParseFunctions {
 				} catch (SyntaxError $x) {
 					throw_xml($e, get_class($x), $x->getMessage(), $p);
 				}
-				self::append(self::CODED_EXPR_IN_RENDER, $p, $buffer, '"<'.$v.$c.'>"');
+				self::append(self::CODED_EXPR_IN_RENDER, $p, $buffer, '"<'.$v.$c.$vc.'>"');
 				if ($p->code == 1)
 					self::append(self::PHP_CODE, $p, $buffer, ";\n");				
 			}

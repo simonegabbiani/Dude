@@ -1,8 +1,8 @@
-<define-macro xmlns:env="http://dudenvironment.org/Environment" name="perform" attr-format="[query=STRING] [dbconn=STRING] [debug=BOOL]">
+<define-macro name="perform" attr-format="[query=STRING] [dbconn=STRING] [debug=BOOL]">
 	<code>
 		if (($id = <code get-attr="dbconn"/>) == null)
 			$id = 'default';
-		<dbconn-open id="$id"/> /* "officially" illegal */
+		dudeBaseDxml_dbconnOpen( $id, {%Application.DBConn.profiles%} );
 		$query = '';
 		if (<code has-attr="query"/>)
 			$query = <code get-attr="query"/>;

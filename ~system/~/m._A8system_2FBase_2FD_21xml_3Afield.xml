@@ -1,0 +1,3 @@
+<define-macro name="field" attr-format="render=ANY">
+		<code render="@$__foreachRecordsetData[ {%render%} ]"/>
+	</define-macro>

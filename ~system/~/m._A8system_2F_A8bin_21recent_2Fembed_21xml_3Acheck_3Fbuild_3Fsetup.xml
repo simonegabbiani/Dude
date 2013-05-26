@@ -1,0 +1,6 @@
+<define-macro name="check-build-setup">
+		<code>
+			if (!<code exists="Context.Dude.Build-Setup"/>)
+				throw new Exception('Dude Embed.xml:Build-Setup missing');
+		</code>
+	</define-macro>

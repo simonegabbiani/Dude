@@ -18,7 +18,7 @@ class _A8system_2F_A8bin_2Fembed_21xml {
 /* <part name='Build-Context-List'> */
 class _A8system_2F_A8bin_2Fembed_21xml_3ABuild_3FContext_3FList extends Piece {
   const PART_NAME = '~system/~bin/embed.xml:Build-Context-List';
-  var $PART_BUILD_ID = 51;
+  var $PART_BUILD_ID = 52;
 
   var $USED_SUBELEMENTS = array(0 => array());
 
@@ -39,7 +39,7 @@ if (!isset($_REQUEST['Dude.Build-Setup']))
 /* <part name='project-list'> */
 class _A8system_2F_A8bin_2Fembed_21xml_3Aproject_3Flist extends Piece {
   const PART_NAME = '~system/~bin/embed.xml:project-list';
-  var $PART_BUILD_ID = 53;
+  var $PART_BUILD_ID = 54;
 
   var $USED_SUBELEMENTS = array(0 => array(' ' => 2));
 
@@ -70,7 +70,7 @@ if (!file_exists("C:/xampp/htdocs/xampp/external/0.4.7/"))
 /* <part name='explode-context'> */
 class _A8system_2F_A8bin_2Fembed_21xml_3Aexplode_3Fcontext extends Piece {
   const PART_NAME = '~system/~bin/embed.xml:explode-context';
-  var $PART_BUILD_ID = 54;
+  var $PART_BUILD_ID = 55;
 
   var $USED_SUBELEMENTS = array(0 => array());
 
@@ -95,7 +95,7 @@ if (!isset($_REQUEST['Dude.Build-Setup']))
 /* <part name='dude-content-updater'> */
 class _A8system_2F_A8bin_2Fembed_21xml_3Adude_3Fcontent_3Fupdater extends Piece {
   const PART_NAME = '~system/~bin/embed.xml:dude-content-updater';
-  var $PART_BUILD_ID = 71;
+  var $PART_BUILD_ID = 75;
 
   var $USED_SUBELEMENTS = array();
 

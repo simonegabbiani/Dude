@@ -47,7 +47,7 @@
 			@list($tok1, $tok2) = explode('()', $errstr, 2);
 			echo "<li style='color:#999'>$errno - $errstr - $errfile - $errline";
 		}*/
-
+		
 		static protected function reprocess_url($newparams) {
 			global $DEF_ARGS;
 			$a = ''; $e = '';
@@ -59,10 +59,10 @@
 			return $_SERVER['SCRIPT_NAME'].'?'.$a;
 		}
 		
-        public function get($client, $index, $partName) {
+        public function get($client, $index, $partName, $aliasName) {
             if (isset($this->parts[$index]))
                 return $this->parts[$index];
-            return $this->parts[$index] = new $partName($client, $index);
+            return $this->parts[$index] = new $partName($client, $index, $aliasName);
         }
 		
 		public static function getExecutionStatus() {
@@ -172,12 +172,13 @@
 				die();
 			}
 		}
-
+		
 		abstract protected function main($CONTEXT, &$DS /*, Piece $caller*/);
 		
-		public function __construct($client, $index) { //&$se, &$attributes /* if NULL mandatory setted with ->initArguments() */, $index = 1) {
+		public function __construct($client, $index, $alias = '') { //&$se, &$attributes /* if NULL mandatory setted with ->initArguments() */, $index = 1) {
 			$this->index = $index;
 			$this->client = $client;
+			$this->alias = $alias;
 		}
 		
 		public function node($CONTEXT, $DS_E, $callbackMethodName, $clientIndex) {
@@ -192,10 +193,10 @@
 			return self::$buffer[$CONTEXT];
 		}
         
-		public static function apply_piece_and_get_contents($CONTEXT, Piece $part, &$DS) {
+		public static function apply_piece_and_get_contents($CONTEXT, Piece $part, &$DS, $caller = null) {
 			$CONTEXT++;
 			self::$buffer[$CONTEXT] = '';
-			$part->main($CONTEXT, $DS, $this);
+			$part->main($CONTEXT, $DS, $caller);
 			return self::$buffer[$CONTEXT];
 		}
 		
@@ -226,7 +227,7 @@
 			$c = new ReflectionClass($encodedFileName . '_3Adude_3Fcontent_3Fupdater');
 			$d = $c->newInstance(null, null, null); //$d = new UpdateUserContent(null); //il client ? ininfluente poich� non ci sono callbacks
 			$DS = array();
-			$content = self::apply_piece_and_get_contents($CONTEXT, $d, $DS);
+			$content = self::apply_piece_and_get_contents($CONTEXT, $d, $DS, null);
 //			if ($cache == 'application') file_put_contents($f, $content);
 //			if ($cache == 'session') $_SESSION[$f] = $content;
 //			if ($cache == 'context') $_REQUEST[$f] = $content;

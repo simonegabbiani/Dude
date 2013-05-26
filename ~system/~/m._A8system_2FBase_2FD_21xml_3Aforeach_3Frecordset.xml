@@ -1,21 +1,21 @@
-<define-macro xmlns:env="http://dudenvironment.org/Environment" name="foreach-recordset" attr-format="[query=STRING] [dbconn=STRING] [assoc=BOOL] [debug=BOOL] [no-results=BOOL]">
+<define-macro name="foreach-recordset" attr-format="[query=STRING] [dbconn=STRING] [assoc=BOOL] [debug=BOOL] [no-results=BOOL]">
 	<code>
 		<set name="Row" value="null"/>;
 		<set name="Count" value="0"/>;
 		if (($id = <code get-attr="dbconn"/>) == null)
 			$id = 'default';
-		<dbconn-open id="$id"/> /* "officially" illegal */
+		dudeBaseDxml_dbconnOpen( $id, {%Application.DBConn.profiles%} );
 		$query = '';
-		if (<code has-attr="query"/>)
+		if (!is_null({%query%}))
 			$query = <code get-attr="query"/>;
 		if (!$query &amp;&amp; <code subelement-exists="query"/>)
 			$query = <code get-subelement-content="query"/>;
 		if (<code has-attr="debug"/>) <code render="@'&lt;tt&gt;QUERY: '.htmlspecialchars($query).'&lt;tt&gt;'"/>;
 		try {
 			$pdo = $GLOBALS['DBConn.pdo_'.$id];
-			$stmt = $pdo-&gt;query($query, DB_MYSQL::RETNORMAL);
+			$stmt = $pdo-&gt;query($query);
 			if ($GLOBALS['DBConn.vendor_'.$id] == 'mysql') {
-				$count = $pdo-&gt;query('SELECT FOUND_ROWS()')-&gt;fetch(PDO::FETCTH_NUM);
+				$count = $pdo-&gt;query('SELECT FOUND_ROWS()')-&gt;fetch(PDO::FETCH_NUM);
 				<set name="Affected_Rows" value="@(int)$count[0]"/>;
 			}
 			else {

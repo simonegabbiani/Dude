@@ -7,7 +7,7 @@ class _A8system_2FWebMasterTools_2FPage_3FList_3FUtils_21xml {
 /* <part name='Page-List'> */
 class _A8system_2FWebMasterTools_2FPage_3FList_3FUtils_21xml_3APage_3FList extends Piece {
   const PART_NAME = '~system/WebMasterTools/Page-List-Utils.xml:Page-List';
-  var $PART_BUILD_ID = 44;
+  var $PART_BUILD_ID = 45;
 
   var $USED_SUBELEMENTS = array();
 
@@ -28,7 +28,7 @@ $this->DS/*size*/[1] = min($this->DS/*size*/[1], 3);
 /* <part name='dude-content-updater'> */
 class _A8system_2FWebMasterTools_2FPage_3FList_3FUtils_21xml_3Adude_3Fcontent_3Fupdater extends Piece {
   const PART_NAME = '~system/WebMasterTools/Page-List-Utils.xml:dude-content-updater';
-  var $PART_BUILD_ID = 68;
+  var $PART_BUILD_ID = 72;
 
   var $USED_SUBELEMENTS = array();
 

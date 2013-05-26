@@ -1,0 +1,8 @@
+<define-macro name="upload-input" attr-format="[progressbar=STRING]">
+		<code>
+			<code tag-start="span" class="dude_WMT_ajaxFileUpload_Button"/>;
+				<code tag="input" data-progressbar-id="{%progressbar%}" type="file" name="file" accept="image/jpg, image/jpeg, image/gif, image/png"/>;
+				<code tag="input" type="button" value="Confirm"/>;
+			<code tag-end="span"/>;
+		</code>
+	</define-macro>

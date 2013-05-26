@@ -69,12 +69,12 @@ $a = ApplicationData::Get('CRUD.tables');
 			$c = $c[$id];
 			if ($c['vendor'] == 'mysql')
 				$GLOBALS['DBConn.pdo_'.$id] 
-					= new PDO('mysql:dbname='.$c['db'].'; host='.$c['host'], $c['username'], $c['password']);
+					= new PDO("mysql:dbname={$c['db']}; host={$c['host']}", $c['username'], $c['password']);
 			else if ($c['vendor'] == 'pgsql')
 				$GLOBALS['DBConn.pdo_'.$id] 
-					= new PDO('pgsql:dbname='.$c['db'].'; host='.$c['host']; user='.$c['username'].'; password='.$c['password']);
+					= new PDO("pgsql:dbname={$c['db']}; host={$c['host']}; user={$c['username']}; password={$c['password']}");
 			else {
-				throw new Exception('D.xml:dbconn-open: don't know how create "'.$c['vendor'].'" connection');
+				throw new Exception('D.xml:dbconn-open: don\'t know how create "'.$c['vendor'].'" connection');
 			}
 			$GLOBALS['DBConn.vendor_'.$id] = $c['vendor']; //simply for cache
 		}/* "officially" illegal */
@@ -99,7 +99,8 @@ $a = ApplicationData::Get('CRUD.tables');
 			if ($this->DS/*Affected_Rows*/[1]) {
 				if (!$this->DS[]) {
 					$i = 0;
-					while ($row = $stmt->fetch()) {	 $this->DS/*Count*/[2] = $i;	 $this->DS/*Row*/[3] = $row;
+					while ($row = $stmt->fetch()) {
+						$__foreachRecordsetData =& $row;	 $this->DS/*Count*/[2] = $i;	 $this->DS/*Row*/[3] = $row;
 	$this->client->node($CONTEXT, $this->DS_E = array(), '_A8system_2FBase_2FCRUD_21xml_3AcrudShow_do_OnRecordFound', $this->index);
 						$i++;
 					}
@@ -136,7 +137,7 @@ $a = ApplicationData::Get('CRUD.tables');
 /* <part name='dude-content-updater'> */
 class _A8system_2FBase_2FCRUD_21xml_3Adude_3Fcontent_3Fupdater extends Piece {
   const PART_NAME = '~system/Base/CRUD.xml:dude-content-updater';
-  var $PART_BUILD_ID = 60;
+  var $PART_BUILD_ID = 62;
 
   var $USED_SUBELEMENTS = array();
 

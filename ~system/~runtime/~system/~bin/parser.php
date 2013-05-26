@@ -205,18 +205,18 @@ class PartParser implements IParser {
 		 }
 		 // * macro
 		 if ($status == -1) {
-            //NS_COMPONENT || NS_KEYWORD
-            if ($ns_area ^ TODO::NS_EXTERN && (($c = GeneralIndex::$index->nearest(DocComponent::MACRO, $localName, $nsUri, $this->dc->df->fileName, $this->dc->simpleName))
-                                                || (/*isset($this->dc->isUpdater) &&*/ ($c = GeneralIndex::$index->nearest(DocComponent::DESCRIPTOR, $localName, $nsUri, $this->dc->df->fileName, $this->dc->simpleName))))) {
-                //if ($this->dc->simpleName == 'ExploreProjects' && $c->simpleName == 'when') {
-					//echo 'founddd ';
-				//}
-                AttrFormat::check($c->attrFormatCache, $node);
-                TODO::bindMacroAttributes($this, $c, $node);
-                $this->dc->to($info->subElementComponent = $c);
-                $info->newIndex = $index = count($this->upm);
-                $a = $this->coreParser->node->getAttribute('as');
-                if ($a == '' && CREATE_DEFAULT_ALIASES) $a = $c->simpleName;
+         //NS_COMPONENT || NS_KEYWORD
+         if ($ns_area ^ TODO::NS_EXTERN && (($c = GeneralIndex::$index->nearest(DocComponent::MACRO, $localName, $nsUri, $this->dc->df->fileName, $this->dc->simpleName))
+                                                || (/*isset($this->dc->isUpdater) &&*/ ($c = GeneralIndex::$index->nearest(DocComponent::DESCRIPTOR, $localName, $nsUri, $this->dc->df->fileName, $this->dc->simpleName))))) 
+			{
+				if ($this->macro) 
+					throw_xml($node, 'IllegalIstructionException', 'Cannot refers to Macros inside other Macros');
+				AttrFormat::check($c->attrFormatCache, $node);
+				TODO::bindMacroAttributes($this, $c, $node);
+				$this->dc->to($info->subElementComponent = $c);
+				$info->newIndex = $index = count($this->upm);
+				$a = $this->coreParser->node->getAttribute('as');
+				if ($a == '' && CREATE_DEFAULT_ALIASES) $a = $c->simpleName;
 				if (!($client_domain = $this->domain)) die('client_domain null');
                 $this->upm[] = $this->macro = array('coord' => array($coord_n, $coord_s), 'cmp' => $c, 'node' => $this->coreParser->node, 
                                     'source' => $this->domain = new StackSource($c, $a, $index), 'se-used' => array());
@@ -687,7 +687,7 @@ class CompileFile { //cf
 			if ($n->nodeType != XML_ELEMENT_NODE) continue;
 			// TODO: non verifica il prefix, perciò non si potrà usarlo..
 			if ($n->tagName == 'code') return $n;
-			else throw_xml($n, 'Unknown element');
+			else throw_xml($n, 'Unknown element', $n->tagName);
 		}
 		return false;
 	 }

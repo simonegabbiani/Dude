@@ -7,7 +7,7 @@ class _A8system_2FBase_2FF_21xml {
 /* <part name='dude-content-updater'> */
 class _A8system_2FBase_2FF_21xml_3Adude_3Fcontent_3Fupdater extends Piece {
   const PART_NAME = '~system/Base/F.xml:dude-content-updater';
-  var $PART_BUILD_ID = 63;
+  var $PART_BUILD_ID = 66;
 
   var $USED_SUBELEMENTS = array();
 

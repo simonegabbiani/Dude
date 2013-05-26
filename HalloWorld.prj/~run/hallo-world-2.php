@@ -7,7 +7,7 @@ class hallo_3Fworld_3F2_21xml {
 /* <part name='My-HTML-Document'> */
 class hallo_3Fworld_3F2_21xml_3AMy_3FHTML_3FDocument extends Piece {
   const PART_NAME = 'hallo-world-2.xml:My-HTML-Document';
-  var $PART_BUILD_ID = 57;
+  var $PART_BUILD_ID = 58;
 
   var $USED_SUBELEMENTS = array(0 => array());
 
@@ -38,7 +38,7 @@ class hallo_3Fworld_3F2_21xml_3AMy_3FHTML_3FDocument extends Piece {
 /* <part name='/index-2'> */
 class hallo_3Fworld_3F2_21xml_3A_2Findex_3F2 extends Piece {
   const PART_NAME = 'hallo-world-2.xml:/index-2';
-  var $PART_BUILD_ID = 58;
+  var $PART_BUILD_ID = 59;
 
   var $USED_SUBELEMENTS = array(0 => array('pagecontent' => 1));
 
@@ -47,7 +47,7 @@ class hallo_3Fworld_3F2_21xml_3A_2Findex_3F2 extends Piece {
 	 $this->DS/*my-title*/[0] = "Hallo World";
 
 	$DS_C = array($this->DS/*my-title*/[0]);
-	$this->P[0] = $this->get($this, 0, 'hallo_3Fworld_3F2_21xml_3AMy_3FHTML_3FDocument'); $this->P[0]->main($CONTEXT, $DS_C, $this);
+	$this->P[0] = $this->get($this, 0, 'hallo_3Fworld_3F2_21xml_3AMy_3FHTML_3FDocument', 'My-HTML-Document'); $this->P[0]->main($CONTEXT, $DS_C, $this);
 ;
 	$this->DS_E = array(); 
   }
@@ -60,7 +60,7 @@ class hallo_3Fworld_3F2_21xml_3A_2Findex_3F2 extends Piece {
 /* <part name='dude-content-updater'> */
 class hallo_3Fworld_3F2_21xml_3Adude_3Fcontent_3Fupdater extends Piece {
   const PART_NAME = 'hallo-world-2.xml:dude-content-updater';
-  var $PART_BUILD_ID = 73;
+  var $PART_BUILD_ID = 77;
 
   var $USED_SUBELEMENTS = array();
 

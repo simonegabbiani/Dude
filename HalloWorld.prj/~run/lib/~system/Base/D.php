@@ -1,5 +1,6 @@
 <?php
 # ~system/Base/D.xml
+require_once 'dudeBaseDxml_db.php';
 
 class _A8system_2FBase_2FD_21xml {
   static $DS_F = array();
@@ -7,7 +8,7 @@ class _A8system_2FBase_2FD_21xml {
 /* <part name='dbconn-profile-application-start'> */
 class _A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fapplication_3Fstart extends Piece {
   const PART_NAME = '~system/Base/D.xml:dbconn-profile-application-start';
-  var $PART_BUILD_ID = 14;
+  var $PART_BUILD_ID = 11;
 
   var $USED_SUBELEMENTS = array();
 
@@ -37,7 +38,7 @@ echo "dbconnprofile:handler started on-application-start";
 /* <part name='dbconn-profile-context-end'> */
 class _A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fcontext_3Fend extends Piece {
   const PART_NAME = '~system/Base/D.xml:dbconn-profile-context-end';
-  var $PART_BUILD_ID = 15;
+  var $PART_BUILD_ID = 12;
 
   var $USED_SUBELEMENTS = array();
 
@@ -48,7 +49,7 @@ class _A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fcontext_3Fend extends Piec
   public function main($CONTEXT, &$DS/*, Piece $__caller*/) {
 	$this->DS =& $DS;
 foreach ($GLOBALS['DBConn.pdo'] as $c)
-				DB_MYSQL::close($c);;
+				$c->close();;
 	$this->DS_E = array(); 
   }
 }
@@ -56,7 +57,7 @@ foreach ($GLOBALS['DBConn.pdo'] as $c)
 /* <part name='dbconn-profile-session-start'> */
 class _A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fsession_3Fstart extends Piece {
   const PART_NAME = '~system/Base/D.xml:dbconn-profile-session-start';
-  var $PART_BUILD_ID = 16;
+  var $PART_BUILD_ID = 13;
 
   var $USED_SUBELEMENTS = array();
 
@@ -75,7 +76,7 @@ class _A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fsession_3Fstart extends Pi
 /* <part name='dude-content-updater'> */
 class _A8system_2FBase_2FD_21xml_3Adude_3Fcontent_3Fupdater extends Piece {
   const PART_NAME = '~system/Base/D.xml:dude-content-updater';
-  var $PART_BUILD_ID = 61;
+  var $PART_BUILD_ID = 64;
 
   var $USED_SUBELEMENTS = array();
 
@@ -90,6 +91,7 @@ Piece::$HANDLERS['application-start']['~system/Base/D.xml:dbconn-profile'] = '_A
 Piece::$HANDLERS['context-end']['~system/Base/D.xml:dbconn-profile'] = '_A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fcontext_3Fend';
 Piece::$HANDLERS['session-start']['~system/Base/D.xml:dbconn-profile'] = '_A8system_2FBase_2FD_21xml_3Adbconn_3Fprofile_3Fsession_3Fstart';
 if (!defined('AUTO_UPDATE_CACHE')) {
- Piece::$AUTO_UPDATE['~system/Base/D.xml'] = -1369305116;
+ Piece::$AUTO_UPDATE['~system/Base/D.xml'] = -1369478907;
+ Piece::$FILES['/~system/Base/dudeBaseDxml_db.php'] = array(true, false);
 }
 ?>

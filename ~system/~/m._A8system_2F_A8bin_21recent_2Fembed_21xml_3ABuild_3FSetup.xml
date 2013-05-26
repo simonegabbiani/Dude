@@ -1,0 +1,15 @@
+<define-macro name="Build-Setup" attr-format="project-name=STRING [check-index=BOOL] [if-not-called=BOOL]">
+	<code>
+		if (!<code exists="Context.Dude.Build-Setup"/>) {
+			$_SESSION['project-name'] = {%project-name%};
+			$m_cwd = getcwd();
+			Build::setup({%~.DudePath%});
+			if (!GeneralIndex::load() &amp;&amp; {%check-index%})
+				throw new Exception('Index does not exists in path '.{%~.DudePath%});
+			chdir($m_cwd);
+		} else if (!<code has-attr="if-not-called"/> || !{%if-not-called%}) {
+			throw new Exception('Dude Embed.xml:Build-Setup already called');
+		}
+		<code set="Context.Dude.Build-Setup" value="1"/>;
+	</code>
+	</define-macro>

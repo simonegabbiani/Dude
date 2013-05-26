@@ -1,0 +1,15 @@
+<define-macro name="foreach-Project-Name">
+	<code>
+		if (!<code exists="~.DudePath"/>)
+			throw new DudeEngineException_ApplicationHasMoved();
+		
+		$fePN__dir = new DirectoryIterator({%~.DudePath%});
+		foreach ($fePN__dir as $fePN__f) {
+			$fePN__n = $fePN__f-&gt;getFilename();
+			if ($fePN__f-&gt;isDir() &amp;&amp; $fePN__n != '~system' &amp;&amp; $fePN__n != '.' &amp;&amp; $fePN__n != '..') {
+				<set name="projectName" value="$fePN__f-&gt;getFilename()"/>;
+				<sub-elements/>;
+			}
+		}
+	</code>
+	</define-macro>
