@@ -1,0 +1,19 @@
+<dude xmlns:d="~/Base/">
+
+	<d:dbconn-profile vendor="mysql" host="127.0.0.1" db="mysql" password="" username="root" />
+
+	<part auto-context="/prova-db">
+		<d:foreach-recordset query="select * from user">
+			<OnRecordFound>
+				<li><code render="@{%foreach-recordset.Row%}['User']" /></li>
+			</OnRecordFound>
+			<OnError>
+				errore
+			</OnError>
+			<OnEmpty>
+				empty
+			</OnEmpty>
+		</d:foreach-recordset>
+	</part>
+
+</dude>

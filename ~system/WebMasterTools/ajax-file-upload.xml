@@ -1,0 +1,131 @@
+﻿<dude>
+
+	# ajax-file-upload.xml
+	
+	<asset file="uploader.js" />
+	
+	<define-macro name="upload-input" attr-format="[progressbar=STRING]">
+		<code>
+			<code tag-start="span" class="dude_WMT_ajaxFileUpload_Button" />;
+				<code tag="input" data-progressbar-id="{%progressbar%}" type="file" name="file" accept="image/jpg, image/jpeg, image/gif, image/png" />;
+				<code tag="input" type="button" value="Confirm" />;
+			<code tag-end="span" />;
+		</code>
+	</define-macro>
+	
+	<define-macro name="upload-progressbar" attr-format="[id=STRING]">
+		<code>
+			<code tag-start="div" id="dude_WMT_ajaxFileUpload_ProgressBar_{%id%}" style="background-color:yellow; border:1px solid orange; width:0px; height:10px"/>;
+			<code tag-end="div" />;
+		</code>
+	</define-macro>
+	
+	<part name="ajax-upload-head">
+		<script language="javascript" src="{%~.RootPrefix%}/lib/~system/WebMasterTools/uploader.js"></script>
+		<script language="javascript">
+			<![CDATA[
+			$(function() {
+				jQuery('.dude_WMT_ajaxFileUpload_Button').each(function() {
+					var 
+					_this = jQuery(this),
+					_childs = _this.children(),
+					_file = jQuery(_childs[0]),
+					_button = jQuery(_childs[1]),
+					_progress = jQuery('#dude_WMT_ajaxFileUpload_ProgressBar_' + _file.attr('data-progressbar-id')),
+					upl = new uploader(_file[0], {
+						url:'{%context-url:/ajax-upload-php-script%}',
+						progress:function(ev){ var pc = Math.floor((ev.loaded/ev.total)*100); _progress.html(/*pc+'%'*/); _progress.css('width',pc+'%'); },
+						error:function(ev){ console.log('error'); },
+						success:function(data){ 
+							alert(_progress.length);
+							_progress.html(/*'100%'*/);
+							_progress.css('width', '100%'); 
+							var file = _file[0].files[0], res;
+							try {
+								res = JSON.parse(data);
+							} catch (e) {
+								alert('Error uploading file: ' + data);
+							}
+							if (typeof res.status == 'undefined')
+								alert('Error uploading image (unknown error)');
+							else if (res.status != 'Ok') 
+								alert('Error uploading image' + res.status);
+							else if (typeof res.result != 'undefined')
+								console.log(file.name);
+						}
+					});
+					_button.click(function(){
+						upl.send();
+					});			
+				});//each
+			});
+			]]>
+		</script>
+	</part>
+	
+	<part auto-context="/ajax-upload-php-script">
+	<code>
+		<![CDATA[
+		
+		# upload basic
+		# if there is a 'Public' folder, put there
+
+		# pay attention to:
+		# ini_get()
+		# - upload_max_filesize
+		# - max_execution_time
+		# - max_input_time
+		# - memory_limit
+		# - post_max_size
+		# - max_file_uploads
+		# see also http://www.php.net/manual/en/features.file-upload.common-pitfalls.php very useful comments 
+		# see also the limit 'Request Filtering' on IIS 7
+		
+		$buff = ''; $err = '';
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$buff .= 'upload-image.php runs only on POST method!';
+		}
+		else {
+			$buff .= var_export($_FILES, true);
+			if (file_exists('Public')) 
+				$dest = './Public/'; 
+			else 
+				$dest = './';
+			//tmp_name name error size type
+			foreach (array_keys($_FILES) as $paramName) {
+				//Already compatible with [] array param name, e.g. <input type="browse" name="files[]" />
+				//compliant with PHP manual, every item of $_FILES is an array
+				if (is_array($_FILES[$paramName]['tmp_name'])) {
+					$files_tmp_name =& $_FILES[$paramName]['tmp_name'];
+					$files_error =& $_FILES[$paramName]['error'];
+					$files_name =& $_FILES[$paramName]['name'];
+				}
+				else {
+					$files_tmp_name = array($_FILES[$paramName]['tmp_name']);
+					$files_error = array($_FILES[$paramName]['error']);
+					$files_name = array($_FILES[$paramName]['name']);
+				}
+				$msg[UPLOAD_ERR_OK] = 'Value: 0; There is no error, the file uploaded with success.';
+				$msg[UPLOAD_ERR_INI_SIZE] = 'Value: 1; The uploaded file exceeds the upload_max_filesize directive in php.ini.';
+				$msg[UPLOAD_ERR_FORM_SIZE] = 'Value: 2; The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';
+				$msg[UPLOAD_ERR_PARTIAL] = 'Value: 3; The uploaded file was only partially uploaded.';
+				$msg[UPLOAD_ERR_NO_FILE] = 'Value: 4; No file was uploaded.';
+				$msg[UPLOAD_ERR_NO_TMP_DIR] = 'Value: 6; Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.';
+				$msg[UPLOAD_ERR_CANT_WRITE] = 'Value: 7; Failed to write file to disk. Introduced in PHP 5.1.0.';
+				$msg[UPLOAD_ERR_EXTENSION] = 'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help. Introduced in PHP 5.2.0.';
+				foreach ($files_tmp_name as $i => $tmp_f) {
+					if ($files_error[$i] != UPLOAD_ERR_OK)
+						$err .= 'Error '.$msg[$files_error[$i]].' for file '.$tmp_f;
+					else if (move_uploaded_file($tmp_f, $dest.$files_name[$i]) === false)
+						$err .= " Error move_upload_file('$tmp_f', '$dest')\n";
+				}
+			}
+			//in 'result' c'è la directory di destinazione
+			echo json_encode(array('status' => ($err == '' ? 'Ok' : $err), 'result' => $dest));
+		}
+		file_put_contents('image-upload.txt', $buff . "\n\n" . $err);
+		]]>
+	</code>
+	</part>
+
+</dude>

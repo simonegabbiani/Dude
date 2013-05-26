@@ -1,0 +1,33 @@
+<dude xmlns:w="~/WebMasterTools/">
+
+	<asset file="/JS/jquery.min.js" />
+
+	<part name="HTML-Document" attr-format="title=STRING">
+		<html lang="it">
+			<head>
+				<title>{%title%}</title>
+				<script language="javascript" src="/JS/jquery.min.js" /> <!-- dude automatically adds </script> -->
+				<use part="w:ajax-upload-head" />
+				<style type="text/css">
+					h1, p {
+						padding:10px;
+					}
+				</style>
+			</head>
+			<body>
+				<h1>{%title%}</h1>
+				<sub-elements name="PageContent" />
+			</body>
+		</html>
+	</part>
+	
+	<part auto-context="/test-upload">
+		<use part="HTML-Document" title="File upload test">
+			<PageContent>
+				<w:upload-input progressbar="myProgressBar"/>
+				<w:upload-progressbar id="myProgressBar" />
+			</PageContent>
+		</use>
+	</part>
+
+</dude>
