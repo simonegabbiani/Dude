@@ -1,0 +1,62 @@
+<dude>
+
+	<!-- simple HTML5 Boilerplate implementation -->
+
+	<asset file="boilerplate-folder.zip" />
+
+	<part name="HTML5-Boilerplate" attr-format="title=STRING">
+
+		&lt;!-- Start HTML5 Boilerplate --&gt;
+		&lt;!DOCTYPE html&gt;
+		&lt;!--[if lt IE 7]&gt;      <code tag-start="html" class="no-js lt-ie9 lt-ie8 lt-ie7"/> &lt;![endif]--&gt;
+		&lt;!--[if IE 7]&gt;         <code tag-start="html" class="no-js lt-ie9 lt-ie8"/> &lt;![endif]--&gt;
+		&lt;!--[if IE 8]&gt;         <code tag-start="html" class="no-js lt-ie9"/> &lt;![endif]--&gt;
+		&lt;!--[if gt IE 8]&gt;&lt;!--&gt; <code tag-start="html" class="no-js"/> &lt;!--&lt;![endif]--&gt;
+			 <head>
+				  <meta charset="utf-8"/>
+				  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+				  <title>{%title%}</title>
+				  <meta name="description" content=""/>
+				  <meta name="viewport" content="width=device-width"/>
+
+				  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+				  <link rel="stylesheet" href="{%~.RootPrefix%}/lib/~system/WebMasterTools/html5-boilerplate-4.20/css/normalize.css"/>
+				  <link rel="stylesheet" href="{%~.RootPrefix%}/lib/~system/WebMasterTools/html5-boilerplate-4.20/css/main.css"/>
+				  <script src="{%~.RootPrefix%}/lib/~system/WebMasterTools/html5-boilerplate-4.20/js/vendor/modernizr-2.6.2.min.js"></script>
+				  <sub-elements name="dochead" />
+			 </head>
+			 <body>
+				  <capture into="nothing">
+				  &lt;!--[if lt IE 7]&gt;
+						<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+				  &lt;![endif]--&gt;
+
+				  &lt;!-- Add your site or application content here --&lt;
+				  <p>Hello world! This is HTML5 Boilerplate.</p>
+				  </capture>
+				  
+				  <sub-elements name="docbody" />
+
+				  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+				  <script>window.jQuery || document.write('&lt;script src="js/vendor/jquery-1.9.1.min.js"&gt;&lt;\/script&gt;')</script>
+				  <script src="{%~.RootPrefix%}/lib/~system/WebMasterTools/html5-boilerplate-4.20/js/plugins.js"></script>
+				  <script src="{%~.RootPrefix%}/lib/~system/WebMasterTools/html5-boilerplate-4.20/js/main.js"></script>
+				  
+				  <sub-elements name="postbody" />
+
+				  &lt;!-- Google Analytics: change UA-XXXXX-X to be your site's ID. --&gt;
+				  <script>
+						var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+						(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+						g.src='//www.google-analytics.com/ga.js';
+						s.parentNode.insertBefore(g,s)}(document,'script'));
+				  </script>
+			 </body>
+		<code tag-end="html" />
+		&lt;!-- End HTML5 Boilerplate --&gt;
+	
+	</part>
+
+
+</dude>
