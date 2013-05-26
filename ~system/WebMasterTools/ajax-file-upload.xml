@@ -6,6 +6,7 @@
 	
 	<define-macro name="upload-input" attr-format="[progressbar=STRING]">
 		<code>
+			if (!{%progressbar%}) <code set="progressbar" value="dudeWMTUploadProgressBar" />;
 			<code tag-start="span" class="dude_WMT_ajaxFileUpload_Button" />;
 				<code tag="input" data-progressbar-id="{%progressbar%}" type="file" name="file" accept="image/jpg, image/jpeg, image/gif, image/png" />;
 				<code tag="input" type="button" value="Confirm" />;
@@ -13,14 +14,15 @@
 		</code>
 	</define-macro>
 	
-	<define-macro name="upload-progressbar" attr-format="[id=STRING]">
+	<define-macro name="upload-progressbar" attr-format="[id=STRING] [class=STRING] [style=STRING]">
 		<code>
-			<code tag-start="div" id="dude_WMT_ajaxFileUpload_ProgressBar_{%id%}" style="background-color:yellow; border:1px solid orange; width:0px; height:10px"/>;
+			if (!{%id%}) <code set="id" value="dudeWMTUploadProgressBar" />;
+			<code tag-start="div" id="{%id%}" class="{%class%}" style="background-color:yellow; border:1px solid orange; width:0px; height:10px; {%style%}"/>;
 			<code tag-end="div" />;
 		</code>
 	</define-macro>
 	
-	<part name="ajax-upload-head">
+	<part name="ajax-upload-html-script">
 		<script language="javascript" src="{%~.RootPrefix%}/lib/~system/WebMasterTools/uploader.js"></script>
 		<script language="javascript">
 			<![CDATA[
@@ -31,13 +33,12 @@
 					_childs = _this.children(),
 					_file = jQuery(_childs[0]),
 					_button = jQuery(_childs[1]),
-					_progress = jQuery('#dude_WMT_ajaxFileUpload_ProgressBar_' + _file.attr('data-progressbar-id')),
+					_progress = jQuery('#' + _file.attr('data-progressbar-id')),
 					upl = new uploader(_file[0], {
 						url:'{%context-url:/ajax-upload-php-script%}',
 						progress:function(ev){ var pc = Math.floor((ev.loaded/ev.total)*100); _progress.html(/*pc+'%'*/); _progress.css('width',pc+'%'); },
 						error:function(ev){ console.log('error'); },
 						success:function(data){ 
-							alert(_progress.length);
 							_progress.html(/*'100%'*/);
 							_progress.css('width', '100%'); 
 							var file = _file[0].files[0], res;
@@ -47,7 +48,7 @@
 								alert('Error uploading file: ' + data);
 							}
 							if (typeof res.status == 'undefined')
-								alert('Error uploading image (unknown error)');
+								alert('Error uploading image (server error)');
 							else if (res.status != 'Ok') 
 								alert('Error uploading image' + res.status);
 							else if (typeof res.result != 'undefined')
@@ -55,6 +56,7 @@
 						}
 					});
 					_button.click(function(){
+						_progress.css('width', '0px'); 
 						upl.send();
 					});			
 				});//each
@@ -69,17 +71,6 @@
 		
 		# upload basic
 		# if there is a 'Public' folder, put there
-
-		# pay attention to:
-		# ini_get()
-		# - upload_max_filesize
-		# - max_execution_time
-		# - max_input_time
-		# - memory_limit
-		# - post_max_size
-		# - max_file_uploads
-		# see also http://www.php.net/manual/en/features.file-upload.common-pitfalls.php very useful comments 
-		# see also the limit 'Request Filtering' on IIS 7
 		
 		$buff = ''; $err = '';
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {

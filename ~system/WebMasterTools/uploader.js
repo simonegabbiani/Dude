@@ -1,3 +1,6 @@
+#
+# For license see https://github.com/mockenoff/HTML5-AJAX-File-Uploader
+#
 function uploader(input, options) {
 	var $this = this;
 

@@ -1,8 +1,10 @@
-﻿<dude xmlns:env="http://dudenvironment.org/Environment">
+﻿<dude>
  
 # 
-# D.xml (MySQL)
+# D.xml (PDO)
 #
+
+	<asset require="dudeBaseDxml_db.php" />
 
 	<define-descriptor name="dbconn-package"><code sub-elements=""/></define-descriptor>
 	
@@ -12,9 +14,6 @@
 			<code sub-elements="" />
 	</define-descriptor>
 
-================================================================================================================
-HANDLERS:
-	
 	<part for-handling-descriptor="dbconn-profile" run-on="application-start" attr-format="f=FILE x=VAR c=NUMBER d=NUMBER">
 		<code>
 			echo "dbconnprofile:handler started on-application-start";
@@ -37,38 +36,19 @@ HANDLERS:
 	<part run-on="context-end" for-handling-descriptor="dbconn-profile">
 		<code>
 			foreach ($GLOBALS['DBConn.pdo'] as $c)
-				DB_MYSQL::close($c);
+				$c->close();
 		</code>
 	</part>
 	
 	<part run-on="session-start" for-handling-descriptor="dbconn-profile">
 		<set name="session.DBConn.profiles" value="{%Application.DBConn.profiles%}" />
-	</part>	
-	
-================================================================================================================
-COMPONENTS:
+	</part>
 
-	
 	<define-macro name="dbconn-open" attr-format="id=STRING">
 	<code>
-		if (!$GLOBALS['DBConn.pdo'][$id]) {
-			if (($id = <code get-attr="id" />) == null)
-				$id = 'default';
-			$c = {%Application.DBConn.profiles%};
-			if (!isset($c[$id]))
-				throw new Exception('D.xml:dbconn-open: unknown dbconn '.$id);
-			$c = $c[$id];
-			if ($c['vendor'] == 'mysql')
-				$GLOBALS['DBConn.pdo_'.$id] 
-					= new PDO('mysql:dbname='.$c['db'].'; host='.$c['host'], $c['username'], $c['password']);
-			else if ($c['vendor'] == 'pgsql')
-				$GLOBALS['DBConn.pdo_'.$id] 
-					= new PDO('pgsql:dbname='.$c['db'].'; host='.$c['host']; user='.$c['username'].'; password='.$c['password']);
-			else {
-				throw new Exception('D.xml:dbconn-open: don't know how create "'.$c['vendor'].'" connection');
-			}
-			$GLOBALS['DBConn.vendor_'.$id] = $c['vendor']; //simply for cache
-		}
+		if (($id = <code get-attr="id" />) == null)
+			$id = 'default';
+		dudeBaseDxml_dbconnOpen( $id, {%Application.DBConn.profiles%} );
 	</code>
 	</define-macro>
 	
@@ -79,9 +59,6 @@ COMPONENTS:
 	</code>
 	</define-macro>
 	
-	
----sql query/perform---
-	
 	<!-- se no-results true, si può leggere Affected_Rows dentro OnQuery. Esegue in ogni caso OnEmpty, quando il risultato è vuoto 
 		 (dipende dalla query, es.: se chiedo "select count(*) from.." Affected_Rows è cmq e solo 1) -->
 	<define-macro name="foreach-recordset" attr-format="[query=STRING] [dbconn=STRING] [assoc=BOOL] [debug=BOOL] [no-results=BOOL]">
@@ -90,18 +67,18 @@ COMPONENTS:
 		<set name="Count" value="0" />;
 		if (($id = <code get-attr="dbconn"/>) == null)
 			$id = 'default';
-		<dbconn-open id="$id" /> /* "officially" illegal */
+		dudeBaseDxml_dbconnOpen( $id, {%Application.DBConn.profiles%} );
 		$query = '';
-		if (<code has-attr="query"/>)
+		if (!is_null({%query%}))
 			$query = <code get-attr="query"/>;
 		if (!$query &amp;&amp; <code subelement-exists="query"/>)
 			$query = <code get-subelement-content="query"/>;
 		if (<code has-attr="debug"/>) <code render="@'&lt;tt&gt;QUERY: '.htmlspecialchars($query).'&lt;tt&gt;'" />;
 		try {
 			$pdo = $GLOBALS['DBConn.pdo_'.$id];
-			$stmt = $pdo->query($query, DB_MYSQL::RETNORMAL);
+			$stmt = $pdo->query($query);
 			if ($GLOBALS['DBConn.vendor_'.$id] == 'mysql') {
-				$count = $pdo->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCTH_NUM);
+				$count = $pdo->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_NUM);
 				<set name="Affected_Rows" value="@(int)$count[0]" />;
 			}
 			else {
@@ -134,7 +111,7 @@ COMPONENTS:
 	<code>
 		if (($id = <code get-attr="dbconn"/>) == null)
 			$id = 'default';
-		<dbconn-open id="$id"/> /* "officially" illegal */
+		dudeBaseDxml_dbconnOpen( $id, {%Application.DBConn.profiles%} );
 		$query = '';
 		if (<code has-attr="query"/>)
 			$query = <code get-attr="query"/>;
@@ -154,4 +131,21 @@ COMPONENTS:
 	</code>
 	</define-macro>
 	
+	<!--<define-macro name="field" attr-format="render=ANY">
+		<code render="@$this->__foreachRecordsetData[ {%~.UniqueID%} ][ {%render%} ]" />
+	</define-macro>-->
+	
 </dude>
+
+
+
+
+
+
+
+
+
+
+
+
+
