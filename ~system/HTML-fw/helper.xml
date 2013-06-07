@@ -1,18 +1,27 @@
 <dude>
 
-	<!-- todo: missing 'requires' -->
+	/**
+	 *
+	 * helper.xml
+	 *
+	 * This is a theoric/draft helper for build frameworks/automations 
+	 * for HTML documents.
+	 *
+	 * The authors/families are n.4:
+	 * 1. this package (n.2 couple of components)
+	 * 2. a template that implements one or both couple of this package
+	 * 3. a component 
+	 * 4. the final implementations
+	 *
+	 */
 
+	 
+	<!-- HEAD -->
 	<define-descriptor name="html-frameworked-head" attr-format="[requires=STRING]">
 		<code sub-elements="" />
 	</define-descriptor>
 
-	<define-descriptor name="html-frameworked-body" attr-format="[requires=STRING]">
-		<code sub-elements="" />
-	</define-descriptor>
-	
-	
-	<!-- HEAD -->
-	<part name="handler-head" 
+	<part name="@head" 
 			run-at="context-start" 
 			for-handling-descriptor="html-frameworked-head" 
 			attr-format="f=STRING x=VAR c=NUMBER d=NUMBER">
@@ -42,7 +51,7 @@
 						<code tag-end="script" />;
 					}
 					else {
-						throw new Error('HTML-fw: unknown require product ' . $r);
+						throw new Error('HTML-fw: (head) unknown require product ' . $r);
 					}
 				}
 			}
@@ -56,7 +65,11 @@
 	
 	
 	<!-- BODY -->
-	<part name="handler-body" 
+	<define-descriptor name="html-frameworked-body" attr-format="[requires=STRING]">
+		<code sub-elements="" />
+	</define-descriptor>
+
+	<part name="@body" 
 			run-at="context-start" 
 			for-handling-descriptor="html-frameworked-body" 
 			attr-format="f=STRING x=VAR c=NUMBER d=NUMBER">
@@ -87,7 +100,7 @@
 						<code tag-end="script" />;
 					}
 					else {
-						throw new Error('HTML-fw: unknown require product ' . $r);
+						throw new Error('HTML-fw: (body) unknown require product ' . $r);
 					}
 				}
 			}
