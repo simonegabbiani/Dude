@@ -1,0 +1,9 @@
+<dude xmlns:fw="~/HTML-fw/">
+	
+	<part auto-context="/fw-test">
+		<use part="fw:default-template-1">
+			<docbody><fw:mail to="mike.johns@email.abc">mail to me</fw:mail></docbody>
+		</use>
+	</part>
+	
+</dude>

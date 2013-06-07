@@ -1,0 +1,8 @@
+Version 0.50
+- deprecate Application-* and Session-* events
+- Application Start/Stop must be managed externally
+- create "Configuration" event and PHP assets "on-the-fly"
+
+"DudeLight"
+- create minimal interpreter with "code cache" capabilities
+- experiment optional integration with XSLT

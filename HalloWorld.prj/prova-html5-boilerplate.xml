@@ -1,0 +1,11 @@
+<dude xmlns:w="~/WebMasterTools/">
+	
+	<part auto-context="/test-html5-boilerplate">
+		<use part="w:HTML5-Boilerplate" title="HTML5 Boilerplate template test">
+			<dochead> &lt;!-- this is in the head --&gt; </dochead>
+			<docbody> <h1>Hallo world, with HTML5 Boilerplate :-) </h1> </docbody>
+			<postbody> This is the right place to put your javascripts </postbody>
+		</use>
+	</part>
+
+</dude>

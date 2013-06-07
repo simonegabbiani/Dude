@@ -1,0 +1,22 @@
+<dude>
+	
+	<!-- compatible with ANY HTML automation framework based the "HTML-fw" package -->
+	
+	<asset file="js/jquery.nospam.js" />
+	
+	<html-frameworked-body requires="jquery">
+		<script language="javascript" src="{%~.RootPrefix%}/lib/~system/HTML-fw/js/jquery.nospam.js" />
+		<script language="javascript">
+			$('.nospam').noSpam(); /*or simply paste here the content of the plug in with .each(function() { ..... });*/
+		</script>
+	</html-frameworked-body>
+	
+	<define-macro name="mail" attr-format="to=STRING">
+	<code>
+		<code tag-start="a" class="nospam" href="@base64_encode({%to%})" />;
+		<code sub-elements="" />;
+		<code tag-end="a" />;
+	</code>
+	</define-macro>
+	
+</dude>

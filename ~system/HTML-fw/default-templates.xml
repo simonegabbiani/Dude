@@ -1,0 +1,18 @@
+<dude>
+
+	<!-- Basic "frameworked" template example -->
+	<part name="default-template-1">
+		&lt;!doctype html&gt;
+		<html lang="en">
+			<head>
+				<use part="loader-head" />
+				<sub-elements name="dochead" />
+			</head>
+			<body>
+				<use part="loader-body" />
+				<sub-elements name="docbody" />
+			</body>
+		</html>
+	</part>
+	
+</dude>
