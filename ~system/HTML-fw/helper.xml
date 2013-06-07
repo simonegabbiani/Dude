@@ -44,22 +44,23 @@
 	<part name="loader-head">
 		<code>
 			$a = {%Application.html-framework-head%};
-			if ((string)$a['requires'] != '') {
-				foreach (preg_split('/,; /', $a['requires']) as $r) {
-					if ($r == 'jquery') {
-						<code tag-start="script" language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" />;
-						<code tag-end="script" />;
-					}
-					else {
-						throw new Error('HTML-fw: (head) unknown require product ' . $r);
+			if (is_array($a)) {
+				if ((string)$a['requires'] != '') {
+					foreach (preg_split('/,; /', $a['requires']) as $r) {
+						if ($r == 'jquery') {
+							<code tag-start="script" language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" />;
+							<code tag-end="script" />;
+						}
+						else {
+							throw new Error('HTML-fw: (head) unknown require product ' . $r);
+						}
 					}
 				}
-			}
-			if (is_array($a)) 
 				foreach ($a as $k => $code) {
 					if ($k != 'requires')
 						<code render="$code" />;
 				}
+			}
 		</code>
 	</part>
 	
@@ -93,22 +94,23 @@
 	<part name="loader-body">
 		<code>
 			$a = {%Application.html-framework-body%};
-			if ((string)$a['requires'] != '') {
-				foreach (preg_split('/,; /', $a['requires']) as $r) {
-					if ($r == 'jquery') {
-						<code tag-start="script" language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" />;
-						<code tag-end="script" />;
-					}
-					else {
-						throw new Error('HTML-fw: (body) unknown require product ' . $r);
+			if (is_array($a)) {
+				if ((string)$a['requires'] != '') {
+					foreach (preg_split('/,; /', $a['requires']) as $r) {
+						if ($r == 'jquery') {
+							<code tag-start="script" language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" />;
+							<code tag-end="script" />;
+						}
+						else {
+							throw new Error('HTML-fw: (body) unknown require product ' . $r);
+						}
 					}
 				}
-			}
-			if (is_array($a)) 
 				foreach ($a as $k => $code) {
 					if ($k != 'requires')
 						<code render="$code" />;
 				}
+			}
 		</code>
 	</part>	
 	
